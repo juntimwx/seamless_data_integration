@@ -1,0 +1,24 @@
+# env file
+env
+.env
+
+# ไฟล์ระบบ
+.DS_Store
+Thumbs.db
+
+# ไฟล์ที่สร้างโดย IDE
+.vscode/
+.idea/
+
+# ไฟล์ล็อก
+*.log
+
+# ไฟล์ Python
+__pycache__/
+*.pyc
+
+# ไฟล์จาก Node.js
+node_modules/
+
+data/
+data.tar.gz

@@ -1,0 +1,20 @@
+LOCAL_HOST = 'localhost'
+LOCAL_PORT = '1433'
+LOCAL_USERNAME = ''
+LOCAL_PASSWORD = ''
+
+# connect database sky
+SKY_HOST = 'localhost'
+SKY_PORT = '1433'
+SKY_USERNAME = 'username'
+SKY_PASSWORD = 'password'
+SKY_DATABASE = 'database'
+
+# connect database data
+DATA_HOST = 'ip address'
+DATA_PORT = '1433'
+DATA_USERNAME = 'username'
+DATA_PASSWORD = 'password'
+
+STUDENT_DISCIPLINARY_DATABASE = 'database'
+PRINTING_DATABASE = 'database'
