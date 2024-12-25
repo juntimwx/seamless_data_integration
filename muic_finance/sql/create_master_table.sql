@@ -9,8 +9,8 @@ CREATE TABLE master.master_cost_center (
 )
 
 CREATE TABLE master.master_funds (
-    id INT,
-    description VARCHAR(MAX)
+    id INT PRIMARY KEY NOT NULL,
+    description VARCHAR(MAX) NOT NULL
     -- Fund_Id	Fund_Description
     -- มี * ช่องหลังสุดด้วย
 )
