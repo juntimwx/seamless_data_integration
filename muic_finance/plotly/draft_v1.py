@@ -21,8 +21,10 @@ import plotly.express as px
 
 # สร้าง connection engine สำหรับฐานข้อมูล
 connect_db = create_engine(
-    f"mssql+pyodbc://{os.getenv('DATA_USERNAME')}:{quote(os.getenv('DATA_PASSWORD'))}@{os.getenv('DATA_HOST')}/{os.getenv('FINANCE_DATABASE')}?driver=ODBC+Driver+17+for+SQL+Server"
+    f"mssql+pyodbc://{os.getenv('LOCAL_USERNAME')}:{quote(os.getenv('LOCAL_PASSWORD'))}@{os.getenv('LOCAL_HOST')}/{os.getenv('FINANCE_DATABASE')}?driver=ODBC+Driver+17+for+SQL+Server"
 )
 
 # read data from sql
-df = pd.DataFrame(pd.read_sql(f'''SELECT * FROM Printing_Cleaning WHERE username = '{os.getenv('SSO_STAFF_ID')}' ORDER BY Year, Num_Month''', connect_db))
+df = pd.DataFrame(pd.read_sql(f'''SELECT * FROM ERP_Cleandata ORDER BY Year, MonthSort''', connect_db))
+
+print(df)
