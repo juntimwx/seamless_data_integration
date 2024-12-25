@@ -46,8 +46,8 @@ CREATE TABLE master.master_mu_strategy (
 )
 
 CREATE TABLE master.master_io_activities (
-    id INT,
-    description VARCHAR(MAX)
+    id INT PRIMARY KEY NOT NULL,
+    description VARCHAR(MAX) NULL
     --IO_Activity_Id	IO_Activity_Description
 )
 
