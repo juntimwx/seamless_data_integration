@@ -17,10 +17,10 @@ CREATE TABLE master.master_funds (
 
 -- file name master_gl
 CREATE TABLE master.master_general_ledger (
-    id INT,
-    description VARCHAR(MAX),
-    group_id VARCHAR(50),
-    group_description VARCHAR(MAX)
+    id BIGINT PRIMARY KEY NOT NULL, -- must use big integer because INT: Ranges from -2,147,483,648 to 2,147,483,647
+    description VARCHAR(MAX) NOT NULL,
+    group_id VARCHAR(50) NOT NULL,
+    group_description VARCHAR(MAX) NOT NULL
     -- Group	Id	Description	Group_Description
 )
 
