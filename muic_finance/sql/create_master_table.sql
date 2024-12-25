@@ -52,8 +52,8 @@ CREATE TABLE master.master_io_activities (
 )
 
 CREATE TABLE master.master_io_goods (
-    id INT,
-    description VARCHAR(MAX)
+    id BIGINT PRIMARY KEY NOT NULL,
+    description VARCHAR(MAX) NULL
     -- IO_Goods_Id	IO_Goods_Description
 )
 
