@@ -29,7 +29,7 @@ CREATE TABLE master.master_ic_strategy (
     year_start INT NOT NULL,
     year_end INT NOT NULL,
     name VARCHAR(MAX) NOT NULL,
-    description VARCHAR(MAX) NOT NULL,
+    description VARCHAR(MAX) NULL,
     status TINYINT NOT NULL
     -- ID_ICST	Year_start	Year_end	Name	Description	status
 )
@@ -40,7 +40,7 @@ CREATE TABLE master.master_mu_strategy (
     year_start INT NOT NULL,
     year_end INT NOT NULL,
     name VARCHAR(MAX) NOT NULL,
-    description VARCHAR(MAX) NOT NULL,
+    description VARCHAR(MAX) NULL,
     status TINYINT NOT NULL
     -- ID_MUST	Year_start	Year_end	Name	Description	status
 )
