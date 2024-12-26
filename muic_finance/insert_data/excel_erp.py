@@ -14,26 +14,45 @@ engine = create_engine(f"mssql+pyodbc://{os.getenv('LOCAL_USERNAME')}:{quote(os.
 #engine = create_engine(f"mssql+pyodbc://{os.getenv('DATA_USERNAME')}:{quote(os.getenv('DATA_PASSWORD'))}@{os.getenv('DATA_HOST')}/{os.getenv('FINANCE_DATABASE')}?driver=ODBC+Driver+17+for+SQL+Server")
 
 # read data from excel file.
-data = pd.read_excel('../../data/muic_finance/master/Master_IO_Project_2023.05.31.xlsx')
+data = pd.read_excel('../../data/muic_finance/data/ERP_2023_20240507.xlsx')
 df = pd.DataFrame(data)
 
 
 # rename DataFrame column to match database schema.
 df = df.rename(columns={
-    'IO_Project' : 'id',
-    'IO_Project_Description' : 'description',
-    'CostCtr' : 'cost_center_id',
-    'ID_ICST' : 'ic_strategy_id',
-    'ID_MUST' : 'mu_strategy_id',
+    'Year' : 'year',
+    'Trimester' : 'trimester',
+    'Day' : 'day',
+    'Month' : 'month',
+    'DocNo' : 'doc_no',
+    'DocDate' : 'doc_date',
+    'FundsCtr' : 'funds_center',
+    'CostCtr_ID' : 'cost_center_id',
+    'CostCentralize' : 'cost_centralize',
+    'IO_Goods' : 'io_good_id',
+    'IO_Work' : 'io_work_id',
+    'IO_Activity' : 'io_activity_id',
+    'IO_Project' : 'io_project_id',
+    'Order_Description' : 'order_description',
+    'HROT' : 'hrot',
+    'GL_ID' : 'general_ledger_id',
+    'GL_Description' : 'general_ledger_description',
+    'Amount' : 'amount',
+    'Details' : 'detail',
+    'MU_Strategy' : 'mu_strategy_id',
+    'IC_Strategy' : 'ic_strategy_id',
 })
+
+# Convert date format if a date column exists (example column name: 'date').
+if 'doc_date' in df.columns:
+    df['doc_date'] = pd.to_datetime(df['doc_date'], format='%d.%m.%Y').dt.strftime('%Y-%m-%d')
 
 print("Dataframe Preview:")
 print(df.head())
-
 # try to insert data to database.
 try:
     # insert data to database appending new rows.
-    result = df.to_sql(os.getenv('IO_PROJECTS_TABLE'), engine, schema=os.getenv('SCHEMA_MASTER'), index=False, chunksize=500, if_exists='append')
+    result = df.to_sql(os.getenv('ERP_2023'), engine, schema=os.getenv('SCHEMA_DEFAULT'), index=False, chunksize=1000, if_exists='append')
     
     # display a message when data inserted successfully and show number of row inserted to database.
     print(f"Data inserted successfully. Number of rows inserted: {len(df)}")
@@ -43,7 +62,9 @@ except SQLAlchemyError as e:
     # display a message when data insertion fails.
     print("Failed to insert data into the database.")
     print(f"Error: {e}")
+    exit()
 except Exception as e:
     # display a message when data insertion fails.
     print("An unexpected error occurred.")
     print(f"Error: {e}")
+    
