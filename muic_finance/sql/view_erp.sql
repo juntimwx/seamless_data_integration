@@ -1,3 +1,4 @@
+CREATE VIEW erp_2023_clean AS
 SELECT erp.[year] ,
 	erp.trimester ,
 	erp.[day] ,
@@ -33,7 +34,20 @@ SELECT erp.[year] ,
 	ioGood.description io_good_description,
 	ioWork.description io_work_description,
 	ioActivity.description io_activity_description,
-	ioProject.description io_project_description
+	ioProject.description io_project_description ,
+	CASE WHEN erp.[month] = '1' THEN '4'
+		WHEN erp.[month] = '2' THEN '5'
+		WHEN erp.[month] = '3' THEN '6'
+		WHEN erp.[month] = '4' THEN '7'
+		WHEN erp.[month] = '5' THEN '8'
+		WHEN erp.[month] = '6' THEN '8'
+		WHEN erp.[month] = '7' THEN '10'
+		WHEN erp.[month] = '8' THEN '11'
+		WHEN erp.[month] = '9' THEN '12'
+		WHEN erp.[month] = '10' THEN '1'
+		WHEN erp.[month] = '11' THEN '2'
+		WHEN erp.[month] = '12' THEN '3'
+	END AS 'month_sort'
 FROM muic_finance.dbo.erp_2023 erp
 LEFT JOIN muic_finance.master.master_cost_center costCenter ON erp.cost_center_id = costCenter.id 
 LEFT JOIN muic_finance.master.master_general_ledger generalLadger ON erp.general_ledger_id = generalLadger.id 

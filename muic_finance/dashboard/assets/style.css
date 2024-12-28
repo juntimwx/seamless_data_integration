@@ -1,0 +1,22 @@
+/* assets/styles.css */
+
+/* กำหนดฟอนต์สำหรับทุกองค์ประกอบในแอป */
+body,
+.dash-table-container {
+    font-family: "Athiti", serif;
+}
+
+/* กำหนดฟอนต์สำหรับหัวตาราง */
+.dash-table-container .dash-header {
+    font-family: "Athiti", serif;
+}
+
+/* กำหนดฟอนต์สำหรับข้อมูลในตาราง */
+.dash-table-container .dash-cell {
+    font-family: "Athiti", serif;
+}
+
+/* เพิ่มความสวยงามให้กับการแบ่งหน้า */
+.dash-table-pagination {
+    font-family: "Athiti", serif;
+}

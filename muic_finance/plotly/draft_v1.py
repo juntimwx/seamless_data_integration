@@ -25,6 +25,7 @@ connect_db = create_engine(
 )
 
 # read data from sql
-df = pd.DataFrame(pd.read_sql(f'''SELECT * FROM ERP_Cleandata ORDER BY Year, MonthSort''', connect_db))
+df = pd.DataFrame(pd.read_sql(f'''SELECT * FROM erp_2023_clean ORDER BY year, month_sort''', connect_db))
 
-print(df)
+print(df.head())
+
