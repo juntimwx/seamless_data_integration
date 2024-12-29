@@ -32,22 +32,7 @@ connect_db = create_engine(
 
 # read data from sql
 df = pd.DataFrame(pd.read_sql(f'''SELECT * FROM erp_2023_clean ORDER BY year, month_sort''', connect_db))
-
-df_gl = (
-    df.groupby(
-        ['general_ledger_id','general_ledger_description'],
-        as_index=False
-    )
-    .aggregate({'amount': 'sum'})
-    .sort_values('amount', ascending=False)
-)
 print(df.head())
-
-df_gl['amount'] = df_gl['amount'].astype(float)
-
-# create column rank
-df_gl['rank'] = range(1, len(df_gl) + 1)
-total_rows = len(df_gl)
 
 # create dash app
 app = dash.Dash(
@@ -59,18 +44,26 @@ app = dash.Dash(
 )
 
 # create table 
-table_figure =  dash_table.DataTable(
+df_gl = (
+    df.groupby(
+        ['general_ledger_id','general_ledger_description'],
+        as_index=False
+    )
+    .aggregate({'amount': 'sum'})
+    .sort_values('amount', ascending=False)
+)
+df_gl['amount'] = df_gl['amount'].astype(float)
+
+# create column rank
+df_gl['rank'] = range(1, len(df_gl) + 1)
+table_gl_figure =  dash_table.DataTable(
     columns=[
         {"name":"No.","id":"rank"},
         {"name":"GL ID","id":"general_ledger_id"},
         {"name":"GL Description","id":"general_ledger_description"},
-        {
-            "name": "Amount",
-            "id": "amount",
-            "type": "numeric",
-            "format": Format(
-                group=",",        # เพิ่มการคั่นหลักพันด้วยจุลภาค
-                precision=2,      # จำนวนทศนิยม 2 ตำแหน่ง
+        {"name": "Amount","id": "amount","type": "numeric","format": Format(    
+                group=",",        # เพิ่มการคั่นหลักพันด้วยจุลภาค    
+                precision=2,      # จำนวนทศนิยม 2 ตำแหน่ง    
                 scheme=Scheme.fixed
             )
         }
@@ -99,7 +92,61 @@ table_figure =  dash_table.DataTable(
     style_as_list_view=True,
     style_table={
         'minWidth': '100%',
-        'maxHeight': '400px',
+        'maxHeight': '900px',
+        'overflowY': 'auto',
+        'overflowX': 'auto',
+    }
+)
+
+df_group = (
+    df.groupby(
+        ['group_id','group_description'],
+        as_index=False
+    )
+    .aggregate({'amount': 'sum'})
+    .sort_values('amount', ascending=False)
+)
+df_group['amount'] = df_group['amount'].astype(float)
+
+#create column rank
+df_group['rank'] = range(1, len(df_group) + 1)
+table_group_figure = dash_table.DataTable(
+    columns=[
+        {"name":"No.","id":"rank"},
+        {"name":"Group ID","id":"group_id"},
+        {"name":"Group Description","id":"group_description"},
+        {"name":"Amount","id":"amount","type":"numeric","format":Format(
+                group=",",        # เพิ่มการคั่นหลักพันด้วยจุลภาค
+                precision=2,      # จำนวนทศนิยม 2 ตำแหน่ง
+                scheme=Scheme.fixed
+            )
+        }
+    ],
+    data=df_group.to_dict('records'),
+    # filter_action='native',
+    sort_action='native',
+    sort_mode='multi',
+    page_size=50,
+    style_header={
+        'backgroundColor': 'lightblue',
+        'fontWeight': 'bold',
+        'textAlign': 'center'
+    },
+    style_cell={
+        'textAlign': 'left',
+        'padding': '5px',
+        'font_size': '12px'
+    },
+    style_data_conditional=[
+        {
+            'if': {'column_id': 'amount'},
+            'textAlign': 'right'
+        }
+    ],
+    style_as_list_view=True,
+    style_table={
+        'minWidth': '100%',
+        'maxHeight': '450px',
         'overflowY': 'auto',
         'overflowX': 'auto',
     }
@@ -151,6 +198,49 @@ line_chart = px.line(
     yaxis=dict(showgrid=True, gridcolor='lightgrey'),
 )
 
+df_office_amount = (
+    df.groupby(
+        ['cost_center_description','year'],
+        as_index=False
+    )
+    .aggregate({'amount': 'sum'})
+    .sort_values('amount', ascending=False)
+)
+# bar chart
+bar_chart = px.bar(
+    df_office_amount,
+    x='cost_center_description',
+    y='amount',
+    color='year',
+    labels={
+        'cost_center_description' : 'Office',
+        'amount': 'Total Amount',
+        'year': 'Year'
+    },
+    title='Cost by office'
+)
+
+# donut chart
+df_cost_center = (
+    df.groupby(
+        ['CostCentralize'],
+        as_index=False,
+    )
+    .aggregate({'amount': 'sum'})
+    # .sort_values('amount', ascending=False)
+)
+donut_chart = px.pie(
+    df_cost_center,
+    names='CostCentralize',
+    values='amount',
+    hole=0.4,  # กำหนดขนาดของรูกลาง (0.4 หมายถึง 40% ของรัศมี)
+    labels={
+        'CostCentralize' : 'Cost Centralize',
+        'amount': 'Total Amount',
+    },
+    title='Cost Centralize'
+)
+
 # create app layout
 app.layout = html.Div(
     className="w-full mx-2 p-6 bg-slate-200",
@@ -163,17 +253,51 @@ app.layout = html.Div(
             className="grid grid-cols-2 gap-4",
             children=[
                 html.Div(
-                    className="bg-white rounded",
+                    className="grid grid-rows-3 gap-4",
                     children=[
-                        table_figure
+                        html.Div(
+                            className="row-span-2 bg-white rounded",
+                            children=[
+                                table_gl_figure
+                            ]
+                        ),
+                        html.Div(
+                            className="bg-white rounded",
+                            children=[
+                                table_group_figure
+                            ]
+                        ),
                     ]
                 ),
                 html.Div(
-                    className="bg-white rounded",
+                    className="grid grid-rows-3 gap-4",
                     children=[
-                        dcc.Graph(
-                            id='line-chart',
-                            figure=line_chart
+                        html.Div(
+                            className="bg-white rounded",
+                            children=[
+                                dcc.Graph(
+                                    id='line-chart',
+                                    figure=line_chart
+                                )
+                            ]
+                        ),
+                        html.Div(
+                            className="bg-white rounded",
+                            children=[
+                                dcc.Graph(
+                                    id='bar_chart',
+                                    figure=bar_chart
+                                )
+                            ]
+                        ),
+                        html.Div(
+                            className="bg-white rounded",
+                            children=[
+                                dcc.Graph(
+                                    id='pie_chart',
+                                    figure=donut_chart
+                                )
+                            ]
                         )
                     ]
                 )
