@@ -186,16 +186,31 @@ line_chart = px.line(
         'year': 'Year'
     },
     title='Cost by month',
-    category_orders={'custom_month_sort': list(month_mapping.values())}
+    category_orders={'custom_month_sort': list(month_mapping.values())},
+    template='ggplot2',
+    markers=True,
+    line_shape='spline'
 ).update_xaxes(
     tickmode='array',
     tickvals=list(month_mapping.values()),
-    ticktext=month_order
+    ticktext=month_order,
+    title_font=dict(size=15, family='Athiti', color='black')
 ).update_layout(
     plot_bgcolor='white',
     title_x=0.5,
     xaxis=dict(showgrid=False),
     yaxis=dict(showgrid=True, gridcolor='lightgrey'),
+    legend=dict(
+        title='Year',
+        title_font=dict(size=14, family='Athiti', color='black'),
+        font=dict(size=13, family='Athiti', color='black'),
+        # bgcolor='rgba(0,0,0,0)',
+        # bordercolor='lightgray',
+        # borderwidth=1
+    ),
+    title=dict(
+        font=dict(size=20, family='Athiti', color='black'),
+    )
 )
 
 df_office_amount = (
@@ -217,7 +232,40 @@ bar_chart = px.bar(
         'amount': 'Total Amount',
         'year': 'Year'
     },
-    title='Cost by office'
+    title='Cost by office',
+    template='ggplot2',
+    # barmode='group',
+    text_auto='.2s' # show number on bar
+).update_traces(
+    textangle=360,
+    textposition='outside'
+).update_layout(
+    plot_bgcolor='rgba(0,0,0,0)',
+    title_x=0.5,
+    xaxis=dict(
+        title='Office',
+        tickangle=-45,
+        title_font=dict(size=14, family='Athiti', color='black'),
+        tickfont=dict(size=14, family='Athiti', color='black')
+    ),
+    yaxis=dict(
+        title='Amount',
+        title_font=dict(size=14, family='Athiti', color='black'),
+        tickfont=dict(size=10, family='Athiti', color='black'),
+        showgrid=True,
+        gridcolor='lightgray'
+    ),
+    legend=dict(
+        title='Year',
+        title_font=dict(size=14, family='Athiti', color='black'),
+        font=dict(size=12, family='Athiti', color='black'),
+        # bgcolor='rgba(0,0,0,0)',
+        # bordercolor='lightgray',
+        # borderwidth=1
+    ),
+    title=dict(
+        font=dict(size=20, family='Athiti', color='black'),
+    )
 )
 
 # donut chart
@@ -238,7 +286,25 @@ donut_chart = px.pie(
         'CostCentralize' : 'Cost Centralize',
         'amount': 'Total Amount',
     },
-    title='Cost Centralize'
+    title='Cost Centralize',
+    color_discrete_sequence=px.colors.qualitative.Pastel,
+    template='ggplot2'
+).update_traces(
+    textposition='inside',
+    textinfo='percent+label'
+).update_layout(
+    title=dict(
+        font=dict(size=20, family='Athiti', color='black'),
+        x=0.5
+    ),
+    legend=dict(
+        title='Cost Centralize',
+        title_font=dict(size=14, family='Athiti', color='black'),
+        font=dict(size=12, family='Athiti', color='black'),
+        # bgcolor='rgba(0,0,0,0)',
+        # bordercolor='lightgray',
+        # borderwidth=1
+    )
 )
 
 # create app layout
