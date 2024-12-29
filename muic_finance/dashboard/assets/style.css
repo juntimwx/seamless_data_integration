@@ -9,6 +9,10 @@ body,
 /* กำหนดฟอนต์สำหรับหัวตาราง */
 .dash-table-container .dash-header {
     font-family: "Athiti", serif;
+    position: -webkit-sticky;
+    /* for Safari support */
+    position: sticky;
+    top: 0;
 }
 
 /* กำหนดฟอนต์สำหรับข้อมูลในตาราง */
