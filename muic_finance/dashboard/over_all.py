@@ -69,33 +69,62 @@ table_gl_figure =  dash_table.DataTable(
         }
     ],
     data=df_gl.to_dict('records'),
-    # filter_action='native',
     sort_action='native',
     sort_mode='multi',
+    # fixed_rows={'headers':True},
     page_size=50,
     style_header={
-        'backgroundColor': 'lightblue',
-        'fontWeight': 'bold',
-        'textAlign': 'center'
+        'background_color': '#0d9488',
+        'font_weight': '600',
+        'text_align': 'center',
+        'color': 'white',
+        'font_family':'Athiti',
+        'font_size':'14px'
     },
     style_cell={
-        'textAlign': 'left',
-        'padding': '5px',
-        'font_size': '12px'
+        'text_align': 'left',
+        'padding': '8px',
+        'font_family':'Athiti',
+        'font_size':'14px',
+        'border':'1px solid #ddd'
     },
     style_data_conditional=[
         {
             'if': {'column_id': 'amount'},
             'textAlign': 'right'
-        }
+        },
+        {
+            'if': {'column_id': 'rank'},
+            'textAlign': 'center'
+        },
+        {
+            'if': {'row_index': 'odd'},
+            'background_color': '#F9F9F9'
+        },
+        {
+            'if': {'row_index': 'even'},
+            'background_color': 'white'
+        },
+        {
+            'if': {'state': 'active'},
+            'background_color': '#D3E4F1',
+            'border':'1px solid #4A90E2'
+        },
+        {
+            'if': {'state': 'selected'},
+            'background_color': '#AED6F1',
+            'border':'1px solid #4A90E2'
+        },
     ],
-    style_as_list_view=True,
     style_table={
         'minWidth': '100%',
-        'maxHeight': '900px',
-        'overflowY': 'auto',
+        'height': '900px',  # กำหนดความสูงคงที่สำหรับตาราง Group
+        'overflowY': 'auto',   # เปิดการเลื่อนแนวตั้ง
         'overflowX': 'auto',
-    }
+        'border': '1px solid #ddd',  # เพิ่มขอบรอบตาราง
+        'borderRadius': '5px'  # มุมมนของขอบตาราง
+    },
+    style_as_list_view=False,
 )
 
 df_group = (
@@ -128,28 +157,57 @@ table_group_figure = dash_table.DataTable(
     sort_mode='multi',
     page_size=50,
     style_header={
-        'backgroundColor': 'lightblue',
-        'fontWeight': 'bold',
-        'textAlign': 'center'
+        'background_color': '#0d9488',
+        'font_weight': '600',
+        'text_align': 'center',
+        'color': 'white',
+        'font_family':'Athiti',
+        'font_size':'14px'
     },
     style_cell={
-        'textAlign': 'left',
-        'padding': '5px',
-        'font_size': '12px'
+        'text_align': 'left',
+        'padding': '8px',
+        'font_family':'Athiti',
+        'font_size':'14px',
+        'border':'1px solid #ddd'
     },
     style_data_conditional=[
         {
             'if': {'column_id': 'amount'},
             'textAlign': 'right'
-        }
+        },
+        {
+            'if': {'column_id': 'rank'},
+            'textAlign': 'center'
+        },
+        {
+            'if': {'row_index': 'odd'},
+            'background_color': '#F9F9F9'
+        },
+        {
+            'if': {'row_index': 'even'},
+            'background_color': 'white'
+        },
+        {
+            'if': {'state': 'active'},
+            'background_color': '#D3E4F1',
+            'border':'1px solid #4A90E2'
+        },
+        {
+            'if': {'state': 'selected'},
+            'background_color': '#AED6F1',
+            'border':'1px solid #4A90E2'
+        },
     ],
-    style_as_list_view=True,
     style_table={
-        'minWidth': '100%',
-        'maxHeight': '450px',
-        'overflowY': 'auto',
+        'min_width': '100%',
+        'max_height': '450px',  # กำหนดความสูงคงที่สำหรับตาราง Group
+        'overflowY': 'auto',   # เปิดการเลื่อนแนวตั้ง
         'overflowX': 'auto',
-    }
+        'border': '1px solid #ddd',  # เพิ่มขอบรอบตาราง
+        'borderRadius': '5px'  # มุมมนของขอบตาราง
+    },
+    style_as_list_view=False,
 )
 
 # create chart
