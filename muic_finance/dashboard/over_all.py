@@ -227,7 +227,7 @@ df_cost_center = (
         as_index=False,
     )
     .aggregate({'amount': 'sum'})
-    # .sort_values('amount', ascending=False)
+    .sort_values('amount', ascending=False)
 )
 donut_chart = px.pie(
     df_cost_center,
