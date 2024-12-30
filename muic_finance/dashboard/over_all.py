@@ -13,12 +13,9 @@ import os
 # load value from file .env
 load_dotenv()
 
-# for create table
-import plotly.graph_objects as graphObj
-
 # for dash and config layout application
 import dash
-from dash import Dash, dcc, html, Input, Output,dash_table
+from dash import dcc, html, dash_table
 from dash.dash_table.Format import Format, Scheme
 
 
@@ -34,7 +31,7 @@ connect_db = create_engine(
 )
 
 # read data from sql
-df = pd.DataFrame(pd.read_sql(f'''SELECT * FROM erp_2023_clean ORDER BY year, month_sort''', connect_db))
+df = pd.DataFrame(pd.read_sql(fr'''SELECT * FROM {os.getenv('ERP_VIEW')} ORDER BY year, month_sort''', connect_db))
 print(df.head())
 
 # create dash app
@@ -247,7 +244,10 @@ line_chart = px.line(
         'year': 'Year'
     },
     title='Cost by month',
-    category_orders={'custom_month_sort': list(month_mapping.values())},
+    category_orders={
+        'custom_month_sort': list(month_mapping.values()),
+        'year':sorted(df_month_amount['year'].unique())
+    },
     color_discrete_sequence=px.colors.qualitative.Pastel,
     template='ggplot2',
     markers=True,
@@ -280,6 +280,7 @@ line_chart = px.line(
     )
 )
 
+# bar chart
 df_office_amount = (
     df.groupby(
         ['cost_center_description','year'],
@@ -288,26 +289,39 @@ df_office_amount = (
     .aggregate({'amount': 'sum'})
     .sort_values('amount', ascending=False)
 )
-# bar chart
-bar_chart = px.bar(
-    df_office_amount,
+
+# 1. คำนวณยอดรวมทั้งหมดต่อ Office
+df_office_total = (
+    df_office_amount.groupby(
+        'cost_center_description'
+        , as_index=False
+    )
+    .aggregate({'amount': 'sum'})
+    .sort_values('amount', ascending=False)
+)
+
+# 2. เลือก Top N Offices ที่มียอดรวมสูงสุด
+df_top_offices = df_office_total.head(15)
+
+# 3. กรองข้อมูลเพื่อให้เหลือเฉพาะ Top N Offices
+df_filtered_office = df_office_amount[df_office_amount['cost_center_description'].isin(df_top_offices['cost_center_description'])]
+
+# 4. สร้างกราฟแท่งแบบ grouped โดยใช้ px.bar
+bar_chart = px.histogram(
+    df_filtered_office,
     x='cost_center_description',
     y='amount',
     color='year',
+    barmode='group',
     labels={
-        'cost_center_description' : 'Office',
+        'cost_center_description': 'Office',
         'amount': 'Total Amount',
         'year': 'Year'
     },
-    title='Cost by office',
+    title='Cost by Office',
     template='ggplot2',
-    # barmode='group',
-    text_auto='.2s', # show number on bar
-    # color_discrete_map={
-    #     '2023': '#EA4335',  # แดง
-    #     '2022': '#4285F4'   # น้ำเงิน
-    # }
-    color_discrete_sequence=px.colors.qualitative.Pastel,
+    text_auto='.2s',  # แสดงตัวเลขบนแท่ง
+    color_discrete_sequence=px.colors.qualitative.Pastel
 ).update_traces(
     textangle=360,
     textposition='outside'
@@ -335,7 +349,7 @@ bar_chart = px.bar(
         yanchor='bottom',
         y=1.02,
         xanchor='right',
-        x=0.1
+        x=1
         # bgcolor='rgba(0,0,0,0)',
         # bordercolor='lightgray',
         # borderwidth=1
