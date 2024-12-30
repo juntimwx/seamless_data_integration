@@ -14,9 +14,11 @@ engine = create_engine(f"mssql+pyodbc://{os.getenv('LOCAL_USERNAME')}:{quote(os.
 #engine = create_engine(f"mssql+pyodbc://{os.getenv('DATA_USERNAME')}:{quote(os.getenv('DATA_PASSWORD'))}@{os.getenv('DATA_HOST')}/{os.getenv('FINANCE_DATABASE')}?driver=ODBC+Driver+17+for+SQL+Server")
 
 # read data from excel file.
-data = pd.read_excel('../../data/muic_finance/data/ERP_2023_20240507.xlsx')
-df = pd.DataFrame(data)
-
+# data = pd.read_excel('../../data/muic_finance/data/ERP_2023_20240507.xlsx')
+data = pd.read_excel('../../data/muic_finance/data/ERP_2022_20230703_FINAL.xlsx')
+df = pd.DataFrame(data,columns=['Year','Trimester','Day','Month','DocNo','DocDate','FundsCtr','CostCtr_ID',
+                                'CostCentralize','IO_Goods','IO_Work','IO_Activity','IO_Project','Order_Description',
+                                'HROT','GL_ID','GL_Description','Amount','Details','MU_Strategy','IC_Strategy'])
 
 # rename DataFrame column to match database schema.
 df = df.rename(columns={
@@ -52,7 +54,8 @@ print(df.head())
 # try to insert data to database.
 try:
     # insert data to database appending new rows.
-    result = df.to_sql(os.getenv('ERP_2023'), engine, schema=os.getenv('SCHEMA_DEFAULT'), index=False, chunksize=1000, if_exists='append')
+    # result = df.to_sql(os.getenv('ERP_2023'), engine, schema=os.getenv('SCHEMA_DEFAULT'), index=False, chunksize=1000, if_exists='append')
+    result = df.to_sql(os.getenv('ERP_2022'), engine, schema=os.getenv('SCHEMA_DEFAULT'), index=False, chunksize=1000, if_exists='append')
     
     # display a message when data inserted successfully and show number of row inserted to database.
     print(f"Data inserted successfully. Number of rows inserted: {len(df)}")
