@@ -25,6 +25,9 @@ from dash.dash_table.Format import Format, Scheme
 # for plot graph
 import plotly.express as px
 
+# helper
+from helper import abbreviate_number
+
 # สร้าง connection engine สำหรับฐานข้อมูล
 connect_db = create_engine(
     f"mssql+pyodbc://{os.getenv('LOCAL_USERNAME')}:{quote(os.getenv('LOCAL_PASSWORD'))}@{os.getenv('LOCAL_HOST')}/{os.getenv('FINANCE_DATABASE')}?driver=ODBC+Driver+17+for+SQL+Server"
@@ -245,6 +248,7 @@ line_chart = px.line(
     },
     title='Cost by month',
     category_orders={'custom_month_sort': list(month_mapping.values())},
+    color_discrete_sequence=px.colors.qualitative.Pastel,
     template='ggplot2',
     markers=True,
     line_shape='spline'
@@ -254,7 +258,7 @@ line_chart = px.line(
     ticktext=month_order,
     title_font=dict(size=15, family='Athiti', color='black')
 ).update_layout(
-    plot_bgcolor='white',
+    plot_bgcolor='rgba(0,0,0,0)',
     title_x=0.5,
     xaxis=dict(showgrid=False),
     yaxis=dict(showgrid=True, gridcolor='lightgrey'),
@@ -299,11 +303,11 @@ bar_chart = px.bar(
     template='ggplot2',
     # barmode='group',
     text_auto='.2s', # show number on bar
-    color_discrete_map={
-    '2023': '#EA4335',  # แดง
-    '2022': '#4285F4'   # น้ำเงิน
-}
-
+    # color_discrete_map={
+    #     '2023': '#EA4335',  # แดง
+    #     '2022': '#4285F4'   # น้ำเงิน
+    # }
+    color_discrete_sequence=px.colors.qualitative.Pastel,
 ).update_traces(
     textangle=360,
     textposition='outside'
@@ -350,6 +354,8 @@ df_cost_center = (
     .aggregate({'amount': 'sum'})
     .sort_values('amount', ascending=False)
 )
+total_amount = df['amount'].sum()
+short_total_amount = abbreviate_number(total_amount)
 donut_chart = px.pie(
     df_cost_center,
     names='CostCentralize',
@@ -377,7 +383,16 @@ donut_chart = px.pie(
         # bgcolor='rgba(0,0,0,0)',
         # bordercolor='lightgray',
         # borderwidth=1
-    )
+    ),
+    annotations=[
+        dict(
+            text=short_total_amount,
+            x=0.5,
+            y=0.5,
+            font=dict(size=20, family='Athiti', color='black'),
+            showarrow=False
+        )
+    ]
 )
 
 # create app layout
@@ -497,9 +512,9 @@ app.layout = html.Div(
 # run server
 if __name__ == '__main__':
     app.run_server(
-        debug=False,
+        debug=True,
         dev_tools_ui=False,  # ปิด UI แสดง Dev Tools
-        dev_tools_props_check=False,
-        dev_tools_silence_routes_logging=True
+        # dev_tools_props_check=True,
+        # dev_tools_silence_routes_logging=True
     )
 
