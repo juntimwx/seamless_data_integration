@@ -219,7 +219,7 @@ month_order = [
 month_mapping = {month: index for index, month in enumerate(month_order, start=1)}
 
 # map month with month sort when %m = month month integer such as 1 2 3 ... and %B month name such as January February ...
-df['month_name'] = df['month_sort'].apply(lambda x: pd.to_datetime(str(x), format='%m').strftime('%B'))
+df['month_name'] = df['month'].apply(lambda x: pd.to_datetime(str(x), format='%m').strftime('%B'))
 df['custom_month_sort'] = df['month_name'].map(month_mapping)
 
 # preparing data
@@ -262,6 +262,11 @@ line_chart = px.line(
         title='Year',
         title_font=dict(size=14, family='Athiti', color='black'),
         font=dict(size=13, family='Athiti', color='black'),
+        orientation='h',
+        yanchor='bottom',
+        y=1.02,
+        xanchor='right',
+        x=0.1,
         # bgcolor='rgba(0,0,0,0)',
         # bordercolor='lightgray',
         # borderwidth=1
@@ -293,7 +298,12 @@ bar_chart = px.bar(
     title='Cost by office',
     template='ggplot2',
     # barmode='group',
-    text_auto='.2s' # show number on bar
+    text_auto='.2s', # show number on bar
+    color_discrete_map={
+    '2023': '#EA4335',  # แดง
+    '2022': '#4285F4'   # น้ำเงิน
+}
+
 ).update_traces(
     textangle=360,
     textposition='outside'
@@ -317,6 +327,11 @@ bar_chart = px.bar(
         title='Year',
         title_font=dict(size=14, family='Athiti', color='black'),
         font=dict(size=12, family='Athiti', color='black'),
+        orientation='h',
+        yanchor='bottom',
+        y=1.02,
+        xanchor='right',
+        x=0.1
         # bgcolor='rgba(0,0,0,0)',
         # bordercolor='lightgray',
         # borderwidth=1
@@ -374,19 +389,19 @@ app.layout = html.Div(
             className="text-4xl font-normal mb-8 text-center text-gray-800"
         ),
         html.Div(
-            className="grid grid-cols-2 gap-4",
+            className="grid grid-cols-1 md:grid-cols-2 gap-4",
             children=[
                 html.Div(
-                    className="grid grid-rows-3 gap-4",
+                    className="flex flex-col gap-4",
                     children=[
                         html.Div(
-                            className="row-span-2 bg-white rounded",
+                            className="bg-white rounded p-2",
                             children=[
                                 table_gl_figure
                             ]
                         ),
                         html.Div(
-                            className="bg-white rounded",
+                            className="bg-white rounded p-2",
                             children=[
                                 table_group_figure
                             ]
@@ -394,32 +409,80 @@ app.layout = html.Div(
                     ]
                 ),
                 html.Div(
-                    className="grid grid-rows-3 gap-4",
+                    className="flex flex-col gap-4",
                     children=[
                         html.Div(
-                            className="bg-white rounded",
+                            className="bg-white rounded p-2",
                             children=[
                                 dcc.Graph(
                                     id='line-chart',
-                                    figure=line_chart
+                                    figure=line_chart,
+                                    config={
+                                        'modeBarButtonsToRemove': [
+                                            'zoom2d',
+                                            'pan2d',
+                                            'select2d',
+                                            'lasso2d',
+                                            'zoomIn2d',
+                                            'zoomOut2d',
+                                            'autoScale2d',
+                                            'resetScale2d',
+                                            'hoverClosestCartesian',
+                                            'hoverCompareCartesian',
+                                            'toggleSpikelines'
+                                        ],
+                                        'displaylogo': False
+                                    }
                                 )
                             ]
                         ),
                         html.Div(
-                            className="bg-white rounded",
+                            className="bg-white rounded p-2",
                             children=[
                                 dcc.Graph(
                                     id='bar_chart',
-                                    figure=bar_chart
+                                    figure=bar_chart,
+                                    config={
+                                        'modeBarButtonsToRemove': [
+                                            'zoom2d',
+                                            'pan2d',
+                                            'select2d',
+                                            'lasso2d',
+                                            'zoomIn2d',
+                                            'zoomOut2d',
+                                            'autoScale2d',
+                                            'resetScale2d',
+                                            'hoverClosestCartesian',
+                                            'hoverCompareCartesian',
+                                            'toggleSpikelines'
+                                        ],
+                                        'displaylogo': False
+                                    }
                                 )
                             ]
                         ),
                         html.Div(
-                            className="bg-white rounded",
+                            className="bg-white rounded p-2",
                             children=[
                                 dcc.Graph(
                                     id='pie_chart',
-                                    figure=donut_chart
+                                    figure=donut_chart,
+                                    config={
+                                        'modeBarButtonsToRemove': [
+                                            'zoom2d',
+                                            'pan2d',
+                                            'select2d',
+                                            'lasso2d',
+                                            'zoomIn2d',
+                                            'zoomOut2d',
+                                            'autoScale2d',
+                                            'resetScale2d',
+                                            'hoverClosestCartesian',
+                                            'hoverCompareCartesian',
+                                            'toggleSpikelines'
+                                        ],
+                                        'displaylogo': False
+                                    }
                                 )
                             ]
                         )
@@ -433,5 +496,10 @@ app.layout = html.Div(
 
 # run server
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(
+        debug=False,
+        dev_tools_ui=False,  # ปิด UI แสดง Dev Tools
+        dev_tools_props_check=False,
+        dev_tools_silence_routes_logging=True
+    )
 
