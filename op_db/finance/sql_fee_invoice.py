@@ -1,3 +1,18 @@
+import pandas as pd
+from sqlalchemy import create_engine
+from sqlalchemy.exc import SQLAlchemyError
+from urllib.parse import quote
+from dotenv import load_dotenv
+import os
+
+# load variable form .env file.
+load_dotenv()
+
+sky_engine = create_engine(f"mssql+pyodbc://{os.getenv('SKY_USERNAME')}:{quote(os.getenv('SKY_PASSWORD'))}@{os.getenv('SKY_HOST')}/{os.getenv('SKY_DATABASE')}?driver=ODBC+Driver+17+for+SQL+Server")
+# engine = create_engine(f"mssql+pyodbc://{os.getenv('LOCAL_USERNAME')}:{quote(os.getenv('LOCAL_PASSWORD'))}@{os.getenv('LOCAL_HOST')}/{os.getenv('OP_DATABASE')}?driver=ODBC+Driver+17+for+SQL+Server")
+engine = create_engine(f"mssql+pyodbc://{os.getenv('DATA_USERNAME')}:{quote(os.getenv('DATA_PASSWORD'))}@{os.getenv('DATA_HOST')}/{os.getenv('OP_DATABASE')}?driver=ODBC+Driver+17+for+SQL+Server")
+
+data = pd.read_sql('''
 SELECT invoice.Id invoiceId,
 	term.AcademicYear acaYear, 
 	term.AcademicTerm semester,
@@ -25,3 +40,10 @@ LEFT JOIN dbo.Terms term ON invoice.TermId = term.Id
 LEFT JOIN student.Students student ON invoice.StudentId = student.Id 
 LEFT JOIN fee.InvoiceItems invoiceItem ON invoiceItem.InvoiceId = invoice.Id
 --WHERE invoice.Number  = '24010012'
+''', sky_engine)
+
+df = pd.DataFrame(data)
+
+print(df)
+df.to_sql('finance_invoice_2025_01_03', engine, index=False, chunksize=500, if_exists='append')  #replace
+# df.to_sql('finance_invoice', engine, index=False, chunksize=500, if_exists='append')  #replace
