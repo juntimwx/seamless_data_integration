@@ -23,7 +23,7 @@ SELECT invoice.Id invoiceId,
         WHEN invoice.[Type] = 'au' THEN 'E'
     END regisType,
 	invoice.Amount invoiceAmount,
-    CASE WHEN invoice.IsPaid = 0 THEN N'-' -- ใช้ N เพื่อรองรับ Unicode
+    CASE WHEN invoice.IsPaid = 0 THEN NULL -- ใช้ N เพื่อรองรับ Unicode
         ELSE FORMAT(invoice.UpdatedAt, 'yyyy-MM-dd HH:mm:ss') -- แปลงวันที่เป็นสตริง
         --ELSE invoice.UpdatedAt
     END paidDate,
@@ -32,8 +32,8 @@ SELECT invoice.Id invoiceId,
 		ELSE 'Y' END paidStatus,
 	CASE WHEN invoiceItem.FeeItemName LIKE 'Lump sum%' THEN N'เหมาจ่าย' -- การใส่ N เป็นการบอก SQL Server ว่าสตริงนี้เป็น Unicode ซึ่งรองรับอักขระภาษาไทย
 		ELSE N'หน่วยกิต' END AS invoiceType,
-	'' schNameTh,
-	'' remark,
+	NULL schNameTh,
+	NULL remark,
 	student.Code studentCode
 FROM  fee.Invoices invoice
 LEFT JOIN dbo.Terms term ON invoice.TermId = term.Id 
@@ -45,5 +45,5 @@ LEFT JOIN fee.InvoiceItems invoiceItem ON invoiceItem.InvoiceId = invoice.Id
 df = pd.DataFrame(data)
 
 print(df)
-df.to_sql('finance_invoice_2025_01_03', engine, index=False, chunksize=500, if_exists='append')  #replace
+df.to_sql('finance_invoice_20250106', engine, index=False, chunksize=500, if_exists='append')  #replace
 # df.to_sql('finance_invoice', engine, index=False, chunksize=500, if_exists='append')  #replace
