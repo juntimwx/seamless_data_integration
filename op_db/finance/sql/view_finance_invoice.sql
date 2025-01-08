@@ -1,4 +1,4 @@
-SELECT [invoiceId]
+SELECT DISTINCT [invoiceId]
       ,[acaYear]
       ,[semester]
       ,[invoiceNo]

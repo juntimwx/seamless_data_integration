@@ -1,17 +1,19 @@
 def extract_year_range(year_range_str):
     """
-    Extracts the Gregorian year range from a string containing both Gregorian
-    and Buddhist years.
+    Extracts only the first Gregorian year from a string containing both
+    Gregorian and Buddhist years.
 
     Args:
         year_range_str (str): Input string (e.g., "2023 - 2024 (2566 - 2567)").
 
     Returns:
-        str: Extracted Gregorian year range (e.g., "2023 - 2024").
+        str: The first Gregorian year (e.g., "2023").
     """
-    # Split the input string to extract the Gregorian part
+    # Split out the Gregorian part (before '(')
     gregorian_part = year_range_str.split('(')[0].strip()
-    return gregorian_part
+    # Split by '-' and take the first year
+    first_year = gregorian_part.split('-')[0].strip()
+    return first_year
 
 
 def thai_date_to_iso(thai_date_str):
@@ -54,4 +56,49 @@ def thai_date_to_iso(thai_date_str):
 
     return formatted_date
 
+
+# ใน helpers/function.py
+
+def extract_start_time_range(time_range):
+    """
+    ดึงเวลาเริ่มต้นจากช่วงเวลาที่ให้มา
+
+    Parameters:
+    time_range (str): ช่วงเวลาที่มีรูปแบบ "HH:MM - HH:MM"
+
+    Returns:
+    str or None: เวลาเริ่มต้นในรูปแบบ "HH:MM" หรือ None หากไม่สามารถแยกได้
+    """
+    # ตรวจสอบว่าค่า time_range เป็นสตริงหรือไม่
+    if isinstance(time_range, str):
+        # ค้นหาตำแหน่งของขีด (-) ในสตริง
+        dash_index = time_range.find("-")
+        # ตรวจสอบว่ามีขีด (-) อยู่ในสตริงหรือไม่
+        if dash_index != -1:
+            # ดึงสตริงก่อนขีด (-) และลบช่องว่างทั้งสองข้าง
+            return time_range[:dash_index].strip()
+    # คืนค่า None หากไม่ใช่สตริงหรือไม่มีขีด (-)
+    return None  # หรือค่าเริ่มต้นอื่นๆ เช่น ''
+
+
+def extract_end_time_range(time_range):
+    """
+    ดึงเวลาสิ้นสุดจากช่วงเวลาที่ให้มา
+
+    Parameters:
+    time_range (str): ช่วงเวลาที่มีรูปแบบ "HH:MM - HH:MM"
+
+    Returns:
+    str or None: เวลาสิ้นสุดในรูปแบบ "HH:MM" หรือ None หากไม่สามารถแยกได้
+    """
+    # ตรวจสอบว่าค่า time_range เป็นสตริงหรือไม่
+    if isinstance(time_range, str):
+        # ค้นหาตำแหน่งของขีด (-) ในสตริง
+        dash_index = time_range.find("-")
+        # ตรวจสอบว่ามีขีด (-) อยู่ในสตริงหรือไม่
+        if dash_index != -1:
+            # ดึงสตริงหลังขีด (-) และลบช่องว่างทั้งสองข้าง
+            return time_range[dash_index + 1:].strip()
+    # คืนค่า None หากไม่ใช่สตริงหรือไม่มีขีด (-)
+    return None  # หรือค่าเริ่มต้นอื่นๆ เช่น ''
 

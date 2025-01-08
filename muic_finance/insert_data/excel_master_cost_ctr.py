@@ -1,5 +1,4 @@
 import pandas as pd
-from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.exc import SQLAlchemyError
 from urllib.parse import quote
