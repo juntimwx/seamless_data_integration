@@ -1,4 +1,21 @@
-select  std.Code student_code,
+import pandas as pd
+from sqlalchemy import create_engine
+from sqlalchemy.exc import SQLAlchemyError
+from urllib.parse import quote
+from dotenv import load_dotenv
+import os
+
+# โหลดตัวแปรจากไฟล์ .env
+load_dotenv()
+
+# สร้าง connection ไปยังฐานข้อมูล SKY
+sky_engine = create_engine(
+    f"mssql+pyodbc://{os.getenv('SKY_USERNAME')}:{quote(os.getenv('SKY_PASSWORD'))}@{os.getenv('SKY_HOST')}/{os.getenv('SKY_DATABASE')}?driver=ODBC+Driver+17+for+SQL+Server"
+)
+engine = create_engine(f"mssql+pyodbc://{os.getenv('LOCAL_USERNAME')}:{quote(os.getenv('LOCAL_PASSWORD'))}@{os.getenv('LOCAL_HOST')}/{os.getenv('CLOUD_DISASTER_DATABASE')}?driver=ODBC+Driver+17+for+SQL+Server")
+
+data = pd.read_sql('''
+    select  std.Code student_code,
         title.NameEn as prefix,
         std.FirstNameEn first_name,
         std.LastNameEn last_name,
@@ -10,7 +27,7 @@ select  std.Code student_code,
             when nationality.NameEn = 'Other' then 'Not Specified'
             when nationality.NameEn = 'TO_CONFIRM' then 'Not Specified'
             when nationality.NameEn = 'passed_all_required_courses' then 'Not Specified'
-            else nationality.NameEn end as nationality,
+            else nationality.NameEn end as 'nationality',
         residentType.NameEn as resident_type,
         studentFeeType.NameEn as student_fee_type,
         term.AcademicYear as academic_year,
@@ -59,13 +76,37 @@ select  std.Code student_code,
         major.Division as division,
         major.DivisionName as division_name,
         std.IsActive as is_active
-from student.Students std
-left join master.Titles title on std.TitleId = title.Id
-left join master.Nationalities nationality on std.NationalityId = nationality.Id
-left join master.ResidentTypes residentType on std.ResidentTypeId = residentType.Id
-left join master.StudentFeeTypes studentFeeType on std.StudentFeeTypeId = studentFeeType.Id
-left join student.AdmissionInformations admissionInfo on std.Id = admissionInfo.StudentId
-left join dbo.Terms term on admissionInfo.AdmissionTermId = term.Id
-left join master.AdmissionTypes admissionType on admissionInfo.AdmissionTermId = admissionType.Id
-left join dbo.StagingStudent stagingStudent on std.Code = stagingStudent.studentCode
-left join dbo.ALLMajor major on SUBSTRING(stagingStudent.programCode,1,4) = major.Major
+    from student.Students std
+    left join master.Titles title on std.TitleId = title.Id
+    left join master.Nationalities nationality on std.NationalityId = nationality.Id
+    left join master.ResidentTypes residentType on std.ResidentTypeId = residentType.Id
+    left join master.StudentFeeTypes studentFeeType on std.StudentFeeTypeId = studentFeeType.Id
+    left join student.AdmissionInformations admissionInfo on std.Id = admissionInfo.StudentId
+    left join dbo.Terms term on admissionInfo.AdmissionTermId = term.Id
+    left join master.AdmissionTypes admissionType on admissionInfo.AdmissionTermId = admissionType.Id
+    left join dbo.StagingStudent stagingStudent on std.Code = stagingStudent.studentCode
+    left join dbo.ALLMajor major on SUBSTRING(stagingStudent.programCode,1,4) = major.Major
+''',sky_engine)
+
+df = pd.DataFrame(data)
+
+print("Dataframe Preview:")
+print(df.head())
+
+# try to insert data to database.
+try:
+    # insert data to database appending new rows.
+    result = df.to_sql(os.getenv('STUDENT_IC_TABLE'), engine, schema=os.getenv('SCHEMA_DEFAULT'), index=False, chunksize=500, if_exists='append')
+    
+    # display a message when data inserted successfully and show number of row inserted to database.
+    print(f"Data inserted successfully. Number of rows inserted: {len(df)}")
+    
+# handle error such as connection or SQL command issues.
+except SQLAlchemyError as e:
+    # display a message when data insertion fails.
+    print("Failed to insert data into the database.")
+    print(f"Error: {e}")
+except Exception as e:
+    # display a message when data insertion fails.
+    print("An unexpected error occurred.")
+    print(f"Error: {e}")

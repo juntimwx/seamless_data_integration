@@ -1,0 +1,1 @@
+CREATE DATABASE muic_cloud_disaster_relief COLLATE Thai_CI_AI;
