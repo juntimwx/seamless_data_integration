@@ -59,7 +59,7 @@ if response.status_code == 200:
             # โดยส่ง employee_id และ status (หรือข้อความใด ๆ ตามต้องการ)
             update_data = {
                 "employee_id": row["employee_id"],
-                "status": "Created"  # หรือระบุเป็น "ดำเนินการแล้ว" ตามต้องการ
+                "status": f"Created {datetime.date.today()}"  # หรือระบุเป็น "ดำเนินการแล้ว" ตามต้องการ
             }
             update_response = requests.post(post_url, data=update_data)
 
