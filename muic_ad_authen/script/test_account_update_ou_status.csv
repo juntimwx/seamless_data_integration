@@ -1,0 +1,3 @@
+SamAccountName,TargetOU,Status
+alessandro,"OU=Lecturer_FT,DC=sky,DC=local",Active
+agnieszka,"OU=Lecturer_FT,DC=sky,DC=local",Active
