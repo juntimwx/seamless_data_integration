@@ -21,5 +21,3 @@ __pycache__/
 node_modules/
 
 data/
-data.tar.gz
-data_v3.tar.gz
