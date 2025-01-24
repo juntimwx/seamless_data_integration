@@ -1,4 +1,4 @@
-CREATE TABLE finance_invoice_20250118(
+CREATE TABLE finance_invoice_20250124(
     invoiceId VARCHAR(30) NOT NULL, 
     acaYear VARCHAR(4) NOT NULL, 
     semester INT NOT NULL CHECK(semester BETWEEN 1 AND 4),
