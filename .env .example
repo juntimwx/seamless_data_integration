@@ -1,20 +1,80 @@
-LOCAL_HOST = 'localhost'
-LOCAL_PORT = '1433'
-LOCAL_USERNAME = ''
-LOCAL_PASSWORD = ''
+LOCAL_HOST='ipaddress'
+LOCAL_PORT='port'
+LOCAL_USERNAME='username'
+LOCAL_PASSWORD='password'
 
 # connect database sky
-SKY_HOST = 'localhost'
-SKY_PORT = '1433'
-SKY_USERNAME = 'username'
-SKY_PASSWORD = 'password'
-SKY_DATABASE = 'database'
+SKY_HOST='ipaddress'
+SKY_PORT='port'
+SKY_USERNAME='username'
+SKY_PASSWORD='password'
+SKY_DATABASE='database_name'
 
 # connect database data
-DATA_HOST = 'ip address'
-DATA_PORT = '1433'
-DATA_USERNAME = 'username'
-DATA_PASSWORD = 'password'
+DATA_HOST='ipaddress'
+DATA_PORT='port'
+DATA_USERNAME='username'
+DATA_PASSWORD='password'
 
-STUDENT_DISCIPLINARY_DATABASE = 'database'
-PRINTING_DATABASE = 'database'
+SCHEMA_MASTER='master'
+SCHEMA_DEFAULT='dbo'
+
+# connect database printer
+PRINTER_HOST='ipaddress'
+PRINTER_PORT='port'
+PRINTER_USERNAME='username'
+PRINTER_PASSWORD='password'
+PAPERCUT_DATABASE='database_name'
+
+STUDENT_DISCIPLINARY_DATABASE='database_name'
+PRINTING_DATABASE='database_name'
+OP_DATABASE='database_name'
+
+# student disciplinary
+SA_DISCIPLINARY_TABLE='table_name'
+OAA_DISCIPLINARY_TABLE='table_name'
+
+
+FINANCE_DATABASE='database_name'
+COST_CENTER_TABLE='table_name'
+FUNDS_TABLE='table_name'
+GL_TABLE='table_name'
+IC_STRATEGY_TABLE='table_name'
+MU_STRATEGY_TABLE='table_name'
+IO_ACTIVITIES_TABLE='table_name'
+IO_GOODS_TABLE='table_name'
+IO_PROJECTS_TABLE='table_name'
+IO_WORKS_TABLE='table_name'
+
+ERP_2022='table_name'
+ERP_2023='table_name'
+ERP_VIEW='table_name'
+
+SSO_STAFF_ID='staff_id'
+SSO_STAFF_OFFICE='office'
+
+
+# config for printer PaperCut
+URL_SERVER=http://ip_papercut/admin
+URL_API=http://ip_papercut/rpc/api/xmlrpc
+AUTH_TOKEN=token_printer
+
+# token url
+token_url=token_google_url
+
+
+ASSET_INVENTORY_DATABASE='database_name'
+ITEM_BRAND_TABLE='table_name'
+ITEM_HARDDISK_TYPE_TABLE='table_name'
+ITEM_OBJECTIVE_TABLE='table_name'
+ITEM_OS_TABLE='table_name'
+ITEM_PROJECT_TABLE='table_name'
+ITEM_TYPE_TABLE='table_name'
+ROOM_TABLE='table_name'
+DEPARTMENT_TABLE='table_name'
+ITEM_TABLE='table_name'
+STAFF_PROFILE_TABLE='table_name'
+
+CLOUD_DISASTER_DATABASE='database_name'
+PROFILE_TABLE='table_name'
+STUDENT_IC_TABLE='table_name'
