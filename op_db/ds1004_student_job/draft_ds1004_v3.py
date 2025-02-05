@@ -16,26 +16,26 @@ df = pd.DataFrame()
 # โหลดค่าจากไฟล์ .env
 load_dotenv()
 
-# engine = create_engine(f"mssql+pyodbc://{os.getenv('SKY_USERNAME')}:{quote(os.getenv('SKY_PASSWORD'))}@{os.getenv('SKY_HOST')}/{os.getenv('SKY_DATABASE')}?driver=ODBC+Driver+17+for+SQL+Server")
+engine = create_engine(f"mssql+pyodbc://{os.getenv('SKY_USERNAME')}:{quote(os.getenv('SKY_PASSWORD'))}@{os.getenv('SKY_HOST')}/{os.getenv('SKY_DATABASE')}?driver=ODBC+Driver+17+for+SQL+Server")
 
-# data_sql = pd.read_sql('''
-#     select 
-#         Code
-#         --,Gender
-#         ,case when Gender = 1 then 'male'
-#             when Gender = 2 then 'female'
-#             else 'not specified' end as Gender
-#         ,CitizenNumber
-#         ,Passport 
-#     from student.Students
-# ''', engine)
-# df_sql = pd.DataFrame(data_sql)
+data_sql = pd.read_sql('''
+    select 
+        Code
+        --,Gender
+        ,case when Gender = 1 then 'male'
+            when Gender = 2 then 'female'
+            else 'not specified' end as Gender
+        ,CitizenNumber
+        ,Passport 
+    from student.Students
+''', engine)
+df_sql = pd.DataFrame(data_sql)
 
-# df['CITIZEN_ID'] = helpers_v3.get_citizen_id_series(df_data, df_sql)
+df['CITIZEN_ID'] = helpers_v3.get_citizen_id_series(df_data, df_sql)
 df['UNIV_ID'] = '00600'
 df['STD_ID'] = df_data['Student ID']
 df['QN_WORK_STATUS'] = helpers_v3.get_work_status_series(df_data)
-# df['QN_MILITARY_STATUS'] = helpers_v3.get_military_status_series(df_data, df_sql)
+df['QN_MILITARY_STATUS'] = helpers_v3.get_military_status_series(df_data, df_sql)
 df['QN_ORDINATE_STATUS'] = helpers_v3.get_ordinate_status_series(df_data)
 df['QN_OCCUP_TYPE'] = helpers_v3.get_occup_type_seties(df_data)
 df['QN_OCCUP_TYPE_TXT'] = helpers_v3.get_occup_type_text(df_data)
@@ -44,16 +44,16 @@ df['QN_TALENT_TXT'] = helpers_v3.get_talent_text(df_data)
 df['QN_POS_ID'] = helpers_v3.get_position_type_series(df_data)
 df['QN_WORK_NAME'] = helpers_v3.get_work_name_text(df_data)
 df['QN_WORKTYPE_ID'] = helpers_v3.get_work_type_series(df_data)
-# df['QN_WORK_ADD']
-# df['QN_WORK_MOO']
-# df['QN_WORK_BUILDING']
-# df['QN_WORK_SOI']
-# df['QN_WORK_STREET']
-# df['QN_WORK_TAMBON']
-# df['QN_WORK_COUNTRY_ID']
-# df['QN_WORK_ZIPCODE']
+df['QN_WORK_ADD'] = helpers_v3.get_work_address_text(df_data)
+df['QN_WORK_MOO'] = helpers_v3.get_work_address_moo_text(df_data)
+df['QN_WORK_BUILDING'] = helpers_v3.get_work_address_building_info(df_data)
+df['QN_WORK_SOI'] = helpers_v3.get_work_address_soi(df_data)
+df['QN_WORK_STREET'] = helpers_v3.get_work_address_road_info(df_data)
+df['QN_WORK_TAMBON'] = helpers_v3.get_work_address_subdistrict(df_data)
+df['QN_WORK_COUNTRY_ID'] = helpers_v3.get_work_address_country(df_data)
+df['QN_WORK_ZIPCODE'] = helpers_v3.get_work_address_postal_code(df_data)
 df['QN_WORK_TEL'] = helpers_v3.get_work_tel_text(df_data)
-# df['QN_WORK_FAX']
+df['QN_WORK_FAX'] = ''
 df['QN_WORK_EMAIL'] = helpers_v3.get_work_email_text(df_data)
 df['QN_SALARY'] = helpers_v3.get_work_salary_text(df_data)
 df['QN_WORK_SATISFY'] = helpers_v3.get_satisfy_type_series(df_data)
