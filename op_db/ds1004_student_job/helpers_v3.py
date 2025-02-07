@@ -231,13 +231,41 @@ def get_talent_series(df_data):
 
     # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน
     work_status_series = get_work_status_series(df_data)
-    return df_data.apply(lambda row: mapping_talent.get(row['Which skill can most help you to get employed?']) if str(work_status_series.loc[row.name]) not in ['3', '4'] else '', axis=1)
+    def map_data(row):
+        work_status = str(work_status_series.loc[row.name])
+
+        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
+        if work_status in ['3', '4']:
+            # ถ้า work_status เท่ากับ '3' หรือ '4' ตอบกลับเป็นค่าว่าง
+            mapped_value = ''
+        else:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้ หากไม่พบให้ส่งเป็น 00 เพื่อกรอกข้อมูลเพิ่มเติม
+            mapped_value = mapping_talent.get(row['Which skill can most help you to get employed?'], '00')
+
+        return mapped_value
+
+    return df_data.apply(map_data, axis=1)
+    # return df_data.apply(lambda row: mapping_talent.get(row['Which skill can most help you to get employed?']) if str(work_status_series.loc[row.name]) not in ['3', '4'] else '', axis=1)
 
 
 def get_talent_text(df_data):
     talent_series = get_talent_series(df_data)
+    def map_data(row):
+        talent = str(talent_series.loc[row.name])
+
+        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
+        if talent == '00':
+            # ถ้า occup_type เท่ากับ '0' ตอบกลับเป็นค่า Which skill can most help you to get employed?
+            mapped_value = row['Which skill can most help you to get employed?']
+        else:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าว่าง
+            mapped_value = ''
+
+        return mapped_value
     
-    return df_data.apply(lambda row: row['Which skill can most help you to get employed?'] if str(talent_series.loc[row.name]) == '00' else '', axis=1)
+    return df_data.apply(map_data, axis=1)
+    
+    # return df_data.apply(lambda row: row['Which skill can most help you to get employed?'] if str(talent_series.loc[row.name]) == '00' else '', axis=1)
 
 
 def get_position_type_series(df_data):
@@ -541,28 +569,60 @@ def get_position_type_series(df_data):
         "barber": "X11020"                                            # ช่างตัดผม (ไม่ระบุชัดเจน)
     }
 
-    # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน
+       # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน
     work_status_series = get_work_status_series(df_data)
-    
-    def map_position_status(row):
-        # ทำความสะอาดข้อมูลใน 'Position' โดยลบช่องว่างส่วนเกิน
-        cleaned_data = str(row['Position']).strip().lower()
-        if str(work_status_series.loc[row.name]) not in ['3', '4']:
-            if cleaned_data == '':
-                return 'X11030'
-            return mapping_position.get(cleaned_data)
+    def map_data(row):
+        work_status = str(work_status_series.loc[row.name])
+
+        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
+        if work_status in ['3', '4']:
+            # ถ้า work_status เท่ากับ '3' หรือ '4' ตอบกลับเป็นค่าว่าง
+            mapped_value = ''
         else:
-            return ''
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้ หากไม่พบให้ส่งเป็น 00 เพื่อกรอกข้อมูลเพิ่มเติม
+            if str(row['Position']).strip().lower() == '':
+                mapped_value = 'X11030'
+            else:
+                mapped_value = mapping_position.get(str(row['Position']).strip().lower())
+
+        return mapped_value
+
+    return df_data.apply(map_data, axis=1)
     
-    # 5) ใช้ .apply(...) เพื่อสร้าง Series ใหม่
-    return df_data.apply(map_position_status, axis=1)
+    # def map_position_status(row):
+    #     # ทำความสะอาดข้อมูลใน 'Position' โดยลบช่องว่างส่วนเกิน
+    #     cleaned_data = str(row['Position']).strip().lower()
+    #     if str(work_status_series.loc[row.name]) not in ['3', '4']:
+    #         if cleaned_data == '':
+    #             return 'X11030'
+    #         return mapping_position.get(cleaned_data)
+    #     else:
+    #         return ''
+    
+    # # 5) ใช้ .apply(...) เพื่อสร้าง Series ใหม่
+    # return df_data.apply(map_position_status, axis=1)
 
 
 def get_work_name_text(df_data):
     # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน
     work_status_series = get_work_status_series(df_data)
     
-    return df_data.apply(lambda row: row['Organization name'] if str(work_status_series.loc[row.name]) not in ['3', '4'] else '', axis=1)
+    def map_data(row):
+        work_status = str(work_status_series.loc[row.name])
+
+        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
+        if work_status in ['3', '4']:
+            # ถ้า work_status เท่ากับ '3' หรือ '4' ตอบกลับเป็นค่าว่าง
+            mapped_value = ''
+        else:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้ หากไม่พบให้ส่งเป็น 00 เพื่อกรอกข้อมูลเพิ่มเติม
+            mapped_value = row['Organization name']
+
+        return mapped_value
+
+    return df_data.apply(map_data, axis=1)
+    
+    # return df_data.apply(lambda row: row['Organization name'] if str(work_status_series.loc[row.name]) not in ['3', '4'] else '', axis=1)
     
 
 def get_work_type_series(df_data):
