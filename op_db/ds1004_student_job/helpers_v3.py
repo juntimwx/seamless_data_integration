@@ -211,7 +211,7 @@ def get_talent_series(df_data):
 def get_talent_text(df_data):
     talent_series = get_talent_series(df_data)
     
-    return df_data.apply(lambda row: row['Type of Job'] if str(talent_series.loc[row.name]) == '00' else '', axis=1)
+    return df_data.apply(lambda row: row['Which skill can most help you to get employed?'] if str(talent_series.loc[row.name]) == '00' else '', axis=1)
 
 
 def get_position_type_series(df_data):
@@ -884,6 +884,12 @@ def get_work_country_series(df_data):
     return df_data.apply(lambda row: mapping_nationality.get(row['Do you prefer to work in Thailand or oversea?  Please specify the country.'].strip().lower()) if str(work_status_series.loc[row.name]) in ['3'] else '', axis=1)
 
 
+def get_work_position_series(df_data):
+    # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน
+    work_status_series = get_work_status_series(df_data)
+    return df_data.apply(lambda row: str(row["What is your preference position?"]).strip() if str(work_status_series.loc[row.name]) in ['3'] else '', axis=1)
+    
+
 def get_work_series(df_data):
     mapping_workneed = {
         "thailand": "01",
@@ -952,7 +958,7 @@ def get_work_series(df_data):
 def get_skill_development_text(df_data):
     # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน
     work_status_series = get_work_status_series(df_data)
-    return df_data.apply(lambda row: str(row['How can you apply your knowledge to your work?']).strip() if str(work_status_series.loc[row.name]) in ['3'] else '', axis=1)
+    return df_data.apply(lambda row: str(row['What is your skills or curriculum that you want to improve?']).strip() if str(work_status_series.loc[row.name]) in ['3'] else '', axis=1)
 
 
 def get_disclosure_agreement_text(df_data):
@@ -977,7 +983,7 @@ def get_require_education_series(df_data):
     
     # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน
     work_status_series = get_work_status_series(df_data)
-    return df_data.apply(lambda row: mapping_required_education.get(row['Do you want to further your study?'].strip().lower()) if str(work_status_series.loc[row.name]) not in ['2','4'] else '', axis=1)
+    return df_data.apply(lambda row: mapping_required_education.get(str(row['Do you want to further your study?']).strip().lower()) if str(work_status_series.loc[row.name]) in ['2','4'] else '', axis=1)
 
 
 def get_level_education_series(df_data):
@@ -1001,7 +1007,7 @@ def get_level_education_series(df_data):
     def map_level_education(row):
         # ทำความสะอาดข้อมูลใน 'Position' โดยลบช่องว่างส่วนเกิน
         cleaned_data = str(row['What level you want to further your study?']).strip().lower()
-        if str(work_status_series.loc[row.name]) not in ['2', '4']:
+        if str(work_status_series.loc[row.name]) in ['2', '4']:
             if str(required_education_series.loc[row.name]) == '1':
                 return mapping_level_education.get(cleaned_data)
             else:
@@ -1015,8 +1021,8 @@ def get_level_education_series(df_data):
 
 def get_program_education_series(df_data):
     mapping_program_education = {
-        "Same field of study": "1",
-        "Different field of study": "2"
+        "same field of study": "1",
+        "different field of study": "2"
     }
     
     # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน
@@ -1311,9 +1317,9 @@ def get_program_education_id_series(df_data):
 
 def get_type_university_series(df_data):
     mapping_type_univ = {
-        "private": "2",   # เอกชน
-        "overseas": "3",  # ต่างประเทศ
         "public": "1",    # รัฐบาล
+        "private": "2",   # เอกชน
+        "overseas": "3"  # ต่างประเทศ
     }
     
     # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน
@@ -1620,6 +1626,7 @@ def get_work_address_subdistrict(df_data):
         axis=1
     )
 
+
 def get_work_address_country(df_data):
     def extract_country(address):
         """
@@ -1688,3 +1695,93 @@ def get_work_address_postal_code(df_data):
         lambda row: results.loc[row.name] if str(work_status_series.loc[row.name]) not in ['3', '4'] else '',
         axis=1
     )
+
+
+def get_work_address_country_series(df_data):
+    address_country = {
+        "thailand": "TH",
+        "japan": "JP",
+        "south korea": "KR",
+        "myanmar": "MM",
+        "qatar": "QA",
+        "no data": "no data"
+    }
+    
+    # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน
+    work_status_series = get_work_status_series(df_data)
+    return df_data.apply(lambda row: address_country.get(row['QN_WORK_COUNTRY_ID'].strip().lower()) if str(work_status_series.loc[row.name]) not in ['3', '4'] else '', axis=1)
+
+
+def get_parse_program_data(df):
+    """
+    รับ DataFrame ที่มีคอลัมน์ 'program_data' ซึ่งเก็บสตริงในรูปแบบ
+      "QN_ADDPROGRAM1 (AX) English Language, QN_ADDPROGRAM2 (AY) Computer, QN_ADDPROGRAM3 (AZ) Accounting, 
+       QN_ADDPROGRAM4 (BA) Internet, QN_ADDPROGRAM5 (BB) Job training, QN_ADDPROGRAM6 (BC) Research Methodology, 
+       QN_ADDPROGRAM8 (BE) Chinese Language, QN_ADDPROGRAM9 (BF) Languages in ASEAN"
+       
+    ฟังก์ชันนี้จะทำการ:
+      1. ตัดส่วน "QN_ADDPROGRAMx (??)" ออกออก เพื่อให้เหลือเฉพาะข้อความหลัก
+      2. ตรวจสอบข้อความที่ได้เทียบกับ mapping ที่กำหนดไว้
+      3. กำหนดค่าให้กับคอลัมน์ต่าง ๆ ดังนี้:
+         - QN_ADDPROGRAM1, QN_ADDPROGRAM2, QN_ADDPROGRAM3, QN_ADDPROGRAM4,
+           QN_ADDPROGRAM5, QN_ADDPROGRAM6, QN_ADDPROGRAM8, QN_ADDPROGRAM9
+         - รายการที่ไม่ตรงกับ mapping จะถือเป็น "อื่นๆ" 
+           โดยตั้งค่า QN_ADDPROGRAM7 = 1 และเก็บข้อความไว้ใน QN_ADDPROGRAM7_TXT
+           
+    คอลัมน์ใหม่ทั้งหมดที่จะเพิ่ม:
+      QN_ADDPROGRAM1, QN_ADDPROGRAM2, QN_ADDPROGRAM3, QN_ADDPROGRAM4,
+      QN_ADDPROGRAM5, QN_ADDPROGRAM6, QN_ADDPROGRAM7, QN_ADDPROGRAM8,
+      QN_ADDPROGRAM9, QN_ADDPROGRAM7_TXT
+    """
+    # กำหนดชื่อคอลัมน์ใหม่ที่ต้องการเพิ่ม
+    new_columns = ['QN_ADDPROGRAM1', 'QN_ADDPROGRAM2', 'QN_ADDPROGRAM3', 
+                   'QN_ADDPROGRAM4', 'QN_ADDPROGRAM5', 'QN_ADDPROGRAM6', 
+                   'QN_ADDPROGRAM7', 'QN_ADDPROGRAM8', 'QN_ADDPROGRAM9', 
+                   'QN_ADDPROGRAM7_TXT']
+    
+    # สร้างคอลัมน์ใหม่ใน DataFrame โดยตั้งค่าเริ่มต้นเป็น 0 (หรือค่าว่างสำหรับข้อความ)
+    for col in new_columns:
+        df[col] = 0
+    df['QN_ADDPROGRAM7_TXT'] = ""
+    
+    # กำหนด mapping ระหว่างข้อความ (หลังจากตัด prefix) กับคอลัมน์ที่ต้องการ
+    mapping = {
+        "English Language": "QN_ADDPROGRAM1",
+        "Computer": "QN_ADDPROGRAM2",
+        "Accounting": "QN_ADDPROGRAM3",
+        "Internet": "QN_ADDPROGRAM4",
+        "Job training": "QN_ADDPROGRAM5",
+        "Research Methodology": "QN_ADDPROGRAM6",
+        "Chinese Language": "QN_ADDPROGRAM8",
+        "Languages in ASEAN": "QN_ADDPROGRAM9"
+    }
+    
+    # Pattern สำหรับตัดส่วน "QN_ADDPROGRAMx (??)" ออก
+    prefix_pattern = r"^QN_ADDPROGRAM\d+\s*\([A-Z]{2}\)\s*"
+    
+    # ประมวลผลแต่ละแถวใน DataFrame
+    for index, row in df.iterrows():
+        # สมมุติว่าในแต่ละแถวข้อมูลอยู่ในคอลัมน์ 'What courses at Mahidol University should be promoted to help contribute to your career? (You can choose more than 1 item)'
+        raw_data = str(row['What courses at Mahidol University should be promoted to help contribute to your career? (You can choose more than 1 item)'])
+        # แยกรายการตามเครื่องหมายจุลภาค
+        items = [item.strip() for item in raw_data.split(",")]
+        others = []
+        
+        for item in items:
+            # ตัด prefix "QN_ADDPROGRAMx (??)" ออก ด้วย regex
+            text = re.sub(prefix_pattern, "", item)
+            # ตรวจสอบว่า text ที่ได้อยู่ใน mapping หรือไม่
+            if text in mapping:
+                col = mapping[text]
+                df.at[index, col] = 1
+            else:
+                # หากไม่อยู่ใน mapping ถือว่าเป็นรายการ "อื่นๆ"
+                others.append(text)
+        
+        # ถ้ามีรายการที่ไม่ตรงกับ mapping
+        if others:
+            df.at[index, 'QN_ADDPROGRAM7'] = 1
+            df.at[index, 'QN_ADDPROGRAM7_TXT'] = ", ".join(others)
+    
+    return df
+

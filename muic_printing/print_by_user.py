@@ -10,7 +10,7 @@ load_dotenv()
 engine = create_engine(f"mssql+pyodbc://{os.getenv('DATA_USERNAME')}:{quote(os.getenv('DATA_PASSWORD'))}@{os.getenv('DATA_HOST')}/{os.getenv('PRINTING_DATABASE')}?driver=ODBC+Driver+17+for+SQL+Server")
 
 
-file_name = 'print_summary_by_user_Dec_2024'
+file_name = 'print_summary_by_user_Jan_2025'
 data = pd.read_csv(fr'../data/muic_printing/{file_name}.csv',
                    skiprows=2)
 
@@ -40,4 +40,4 @@ df = pd.DataFrame(data, columns=
 # df['date_version'] = '2024-10-31'
 
 print(df)
-df.to_sql('print_summary_by_user_Dec_2024', engine, index=False, chunksize=500, if_exists='append')  #replace
+df.to_sql('print_summary_by_user_Jan_2025', engine, index=False, chunksize=500, if_exists='append')  #replace
