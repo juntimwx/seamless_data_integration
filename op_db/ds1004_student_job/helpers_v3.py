@@ -139,15 +139,41 @@ def get_occup_type_seties(df_data):
     
     # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน
     work_status_series = get_work_status_series(df_data)
+    def map_data(row):
+        work_status = str(work_status_series.loc[row.name])
+
+        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
+        if work_status in ['3', '4']:
+            # ถ้า work_status เท่ากับ '3' หรือ '4' ตอบกลับเป็นค่าว่าง
+            mapped_value = ''
+        else:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้ หากไม่พบให้ส่งเป็น 00 เพื่อกรอกข้อมูลเพิ่มเติม
+            mapped_value = mapping_occup_type.get(row['Type of Job'], '00')
+
+        return mapped_value
+
+    return df_data.apply(map_data, axis=1)
     
-    return df_data.apply(lambda row: mapping_occup_type.get(row['Type of Job']) if str(work_status_series.loc[row.name]) not in ['3', '4'] else '', axis=1)
+    # return df_data.apply(lambda row: mapping_occup_type.get(row['Type of Job']) if str(work_status_series.loc[row.name]) not in ['3', '4'] else '', axis=1)
     
 
 def get_occup_type_text(df_data):
     # เรียกใช้ฟังก์ชัน get_occup_type_seties เพื่อรับ Series ของ Occupation Type
     occup_type_seties = get_occup_type_seties(df_data)
+    def map_data(row):
+        occup_type = str(occup_type_seties.loc[row.name])
+
+        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
+        if occup_type == '00':
+            # ถ้า occup_type เท่ากับ '0' ตอบกลับเป็นค่า Type of Job
+            mapped_value = row['Type of Job']
+        else:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าว่าง
+            mapped_value = ''
+
+        return mapped_value
     
-    return df_data.apply(lambda row: row['Type of Job'] if str(occup_type_seties.loc[row.name]) == '00' else '', axis=1)
+    return df_data.apply(map_data, axis=1)
 
 
 def get_talent_series(df_data):
