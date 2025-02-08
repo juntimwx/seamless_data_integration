@@ -156,7 +156,7 @@ def get_how_to_get_job_series(df_data):
 def get_how_to_get_job_text(df_data):
     # เรียกใช้ฟังก์ชัน get_how_to_get_job_series เพื่อรับ Series ของสถานะการทำงาน
     how_to_get_job_series = get_how_to_get_job_series(df_data)
-    return df_data.apply(lambda row: str(row['Is monthly salary in line with your qualification and education?']).strip() if str(how_to_get_job_series.loc[row.name]) == 0 else '', axis=1)
+    return df_data.apply(lambda row: str(row['How did you get your job?']).strip() if str(how_to_get_job_series.loc[row.name]) == 0 else '', axis=1)
 
 
 def get_alumni_commu_satisfy(df_data):
