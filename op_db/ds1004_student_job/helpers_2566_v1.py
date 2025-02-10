@@ -466,3 +466,146 @@ def get_match_education_series(df_data):
         return mapped_value
 
     return df_data.apply(map_data, axis=1)
+
+
+""" จับคู่การนำความรู้ที่เรียนมาประยุกต์ใช้กับการทำงาน (จาก google form มีตัวเลือกให้เลือก) column => How can you apply your knowledge to your work?
+    เงื่อนไขคือ ถ้าสถานะการทำงาน get_work_status_series เป็น 3 หรือ 4 ต้องส่งค่ากลับเป็นว่าง แต่ถ้าไม่ใช่ ให้ส่งค่าที่จับคู่ได้กลับมา
+    การจับคู่คือ ถ้าตรงกับตัวเลือกที่กำหนดใน google form ให้ส่งค่ากลับมา โดยไม่มีค่าเริ่มต้น หรือค่าอื่นๆ เพื่อกรอกข้อมูลเพิ่มเติม
+"""
+def get_apply_education_series(df_data):
+    mapping_apply_edu = {
+        'To a very great extent': '01',
+        'To a great extent': '02',
+        'To a moderate extent': '03',
+        'A little': '04',
+        'Very little': '05'
+    }
+    
+    # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน
+    work_status_series = get_work_status_series(df_data)
+    def map_data(row):
+        work_status = str(work_status_series.loc[row.name])
+
+        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
+        if work_status in ['3', '4']:
+            # ถ้า work_status เท่ากับ '3' หรือ '4' ตอบกลับเป็นค่าว่าง
+            mapped_value = ''
+        else:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
+            mapped_value = mapping_apply_edu.get(row['How can you apply your knowledge to your work?'].strip())
+
+        return mapped_value
+
+    return df_data.apply(map_data, axis=1)
+
+
+""" จับคู่เหตุผลที่ยังไม่ทำงาน (จาก google form มีตัวเลือกให้เลือก) column => If you are unemployed, please specify the most significant reasons:
+    เงื่อนไขคือ ถ้าสถานะการทำงาน get_work_status_series เป็น 3 หรือ 4 ต้องส่งค่ากลับเป็นว่าง แต่ถ้าไม่ใช่ ให้ส่งค่าที่จับคู่ได้กลับมา
+    การจับคู่คือ ถ้าตรงกับตัวเลือกที่กำหนดใน google form ให้ส่งค่ากลับมา แต่ถ้าไม่ใช่ให้ส่ง 0 เท่านั้น
+"""
+def get_cause_nowork_series(df_data):
+    mapping_cause_nowork = {
+        'Don’t want to work now': '1',
+        'Waiting for the application’s result': '2',
+        'Could not find a job': '3',
+        'Willing to be a freelancer': '4'
+    }
+    
+    # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน
+    work_status_series = get_work_status_series(df_data)
+    def map_data(row):
+        work_status = str(work_status_series.loc[row.name])
+
+        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
+        if work_status == '3':
+            # ถ้า work_status เท่ากับ '3' ตอบกลับเป็นค่าที่ map ข้อมูลได้ 
+            mapped_value = mapping_cause_nowork.get(row['If you are unemployed, please specify the most significant reasons:'].strip(),'0')
+        else:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าว่าง
+            mapped_value = ''
+
+        return mapped_value
+
+    return df_data.apply(map_data, axis=1)
+
+
+""" จับคู่เหตุผลที่ยังไม่ทำงาน เพิ่มเติม (จาก google form มีตัวเลือกให้เลือก) column => If you are unemployed, please specify the most significant reasons:
+    เงื่อนไขคือ ถ้าสถานะการทำงาน get_cause_nowork_series เป็น 0 ต้องส่งค่าที่นักศึกษากรอกกลับมา แต่ถ้านอกเหนือให้เป็นค่าว่างเท่านั้น
+"""
+def get_cause_nowork_text(df_data):
+    cause_nowork_series = get_cause_nowork_series(df_data)
+    def map_data(row):
+        cause_nowork = str(cause_nowork_series.loc[row.name])
+
+        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
+        if cause_nowork == '0':
+            # ถ้า occup_type เท่ากับ '0' If you are unemployed, please specify the most significant reasons:
+            mapped_value = row['If you are unemployed, please specify the most significant reasons:'].strip()
+        else:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าว่าง
+            mapped_value = ''
+
+        return mapped_value
+    
+    return df_data.apply(map_data, axis=1)
+
+
+""" จับคู่ปัญหาในการหางานทำ (จาก google form มีตัวเลือกให้เลือก) column => Do you have any problem in getting a job?
+    เงื่อนไขคือ ถ้าสถานะการทำงาน get_work_status_series เป็น 3 หรือ 4 ต้องส่งค่ากลับเป็นว่าง แต่ถ้าไม่ใช่ ให้ส่งค่าที่จับคู่ได้กลับมา
+    การจับคู่คือ ถ้าตรงกับตัวเลือกที่กำหนดใน google form ให้ส่งค่ากลับมา แต่ถ้าไม่ใช่ให้ส่ง 0 เท่านั้น
+"""
+def get_problem_find_work_series(df_data):
+    mapping_prob_findwork = {
+        'No': '01',
+        'Yes (Lack information on job availability)': '02',
+        'Yes (Could not find a desired job)': '03',
+        'Yes(Don’t want to take an examination)': '04',
+        'Yes (Lack personal support)': '05',
+        'Yes (Lack personal or financial guarantors)': '06',
+        'Yes (Rejected by an organization)': '07',
+        'Yes (Little salary)': '08',
+        'Yes (Could not pass an examination)': '09',
+        'Yes (Health issues)': '10',
+        'Yes (Lack of foreign language skill)': '11',
+        'Yes (Lack of computer skill)': '12',
+        'Yes (Lack of experience)': '13',
+        'Yes (GPA does not meet the requirement)': '14'
+    }
+    
+    # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน
+    work_status_series = get_work_status_series(df_data)
+    def map_data(row):
+        work_status = str(work_status_series.loc[row.name])
+
+        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
+        if work_status == '3':
+            # ถ้า work_status เท่ากับ '3' ตอบกลับเป็นค่าที่ map ข้อมูลได้ 
+            mapped_value = mapping_prob_findwork.get(row['Do you have any problem in getting a job?'].strip(),'00')
+        else:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าว่าง
+            mapped_value = ''
+
+        return mapped_value
+
+    return df_data.apply(map_data, axis=1)
+
+
+""" จับคู่ปัญหาในการหางานทำ เพิ่มเติม (จาก google form มีตัวเลือกให้เลือก) column => Do you have any problem in getting a job?
+    เงื่อนไขคือ ถ้าสถานะการทำงาน get_problem_find_work_series เป็น 00 ต้องส่งค่าที่นักศึกษากรอกกลับมา แต่ถ้านอกเหนือให้เป็นค่าว่างเท่านั้น
+"""
+def get_problem_find_work_text(df_data):
+    problem_find_work_series = get_problem_find_work_series(df_data)
+    def map_data(row):
+        problem_find_work = str(problem_find_work_series.loc[row.name])
+
+        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
+        if problem_find_work == '00':
+            # ถ้า occup_type เท่ากับ '00' Do you have any problem in getting a job?
+            mapped_value = row['Do you have any problem in getting a job?'].strip()
+        else:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าว่าง
+            mapped_value = ''
+
+        return mapped_value
+    
+    return df_data.apply(map_data, axis=1)

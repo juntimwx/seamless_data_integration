@@ -60,6 +60,11 @@ df['QN_WORK_SATISFY'] = helpers_2566_v1.get_satisfy_type_series(df_data)
 df['QN_WORK_SATISFY_TXT'] = helpers_2566_v1.get_satisfy_text(df_data)
 df['QN_TIME_FINDWORK'] = helpers_2566_v1.get_time_find_work_series(df_data)
 df['QN_MATCH_EDU'] = helpers_2566_v1.get_match_education_series(df_data)
+df['QN_APPLY_EDU'] = helpers_2566_v1.get_apply_education_series(df_data)
+df['QN_CAUSE_NOWORK'] = helpers_2566_v1.get_cause_nowork_series(df_data)
+df['QN_CAUSE_NOWORK_TXT'] = helpers_2566_v1.get_cause_nowork_text(df_data)
+df['QN_PROB_FINDWORK'] = helpers_2566_v1.get_problem_find_work_series(df_data)
+df['QN_PROB_FINDWORK_TXT'] = helpers_2566_v1.get_problem_find_work_text(df_data)
 
 df['QY_YEAR'] = '2567'
 

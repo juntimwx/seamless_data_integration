@@ -56,6 +56,7 @@ df['QN_WORK_COUNTRY_ID'] = helpers_v3.get_work_address_country_series(df_data)
 df['QN_WORK_ZIPCODE'] = helpers_v3.get_work_address_zipcode_text(df_data)
 # df['QN_WORK_ADD'] = helpers_v3.get_work_address_text(df_data)
 # df['QN_WORK_MOO'] = helpers_v3.get_work_address_moo_text(df_data)
+
 # df['QN_WORK_BUILDING'] = helpers_v3.get_work_address_building_info(df_data)
 # df['QN_WORK_SOI'] = helpers_v3.get_work_address_soi(df_data)
 # df['QN_WORK_STREET'] = helpers_v3.get_work_address_road_info(df_data)
