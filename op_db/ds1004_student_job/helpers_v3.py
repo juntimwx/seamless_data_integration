@@ -661,7 +661,7 @@ def get_work_type_series(df_data):
             mapped_value = ''
         else:
             # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
-            mapped_value = mapping_work_type.get(row['Industry'])
+            mapped_value = mapping_work_type.get(row['Industry'].strip().lower())
 
         return mapped_value
 
@@ -922,7 +922,7 @@ def get_satisfy_type_series(df_data):
             mapped_value = ''
         else:
             # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้ หากไม่พบให้ส่งเป็น 00 เพื่อกรอกข้อมูลเพิ่มเติม
-            mapped_value = mapping_work_satisfy.get(row['Are you satisfied with your work?'], '00')
+            mapped_value = mapping_work_satisfy.get(row['Are you satisfied with your work?'].strip().lower(), '00')
 
         return mapped_value
 
@@ -972,7 +972,7 @@ def get_time_find_work_series(df_data):
             mapped_value = ''
         else:
             # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
-            mapped_value = mapping_time_findwork.get(row['After you graduated, how long did it take you to get a job?'])
+            mapped_value = mapping_time_findwork.get(row['After you graduated, how long did it take you to get a job?'].strip().lower())
 
         return mapped_value
 
@@ -998,7 +998,7 @@ def get_match_education_series(df_data):
             mapped_value = ''
         else:
             # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
-            mapped_value = mapping_time_findwork.get(row['Have you worked in the field that you graduated?'])
+            mapped_value = mapping_time_findwork.get(row['Have you worked in the field that you graduated?'].strip().lower())
 
         return mapped_value
 
@@ -1027,7 +1027,7 @@ def get_apply_education_series(df_data):
             mapped_value = ''
         else:
             # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
-            mapped_value = mapping_apply_edu.get(row['How can you apply your knowledge to your work?'])
+            mapped_value = mapping_apply_edu.get(row['How can you apply your knowledge to your work?'].strip().lower())
 
         return mapped_value
 
@@ -1079,7 +1079,7 @@ def get_cause_nowork_series(df_data):
         # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
         if work_status == '3':
             # ถ้า work_status เท่ากับ '3' ตอบกลับเป็นค่าที่ map ข้อมูลได้ 
-            mapped_value = mapping_cause_nowork.get(row['If you are unemployed, please specify the most significant reasons:'],'0')
+            mapped_value = mapping_cause_nowork.get(row['If you are unemployed, please specify the most significant reasons:'].strip().lower(),'0')
         else:
             # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าว่าง
             mapped_value = ''
@@ -1143,7 +1143,7 @@ def get_problem_find_work_series(df_data):
         # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
         if work_status == '3':
             # ถ้า work_status เท่ากับ '3' ตอบกลับเป็นค่าที่ map ข้อมูลได้ 
-            mapped_value = mapping_prob_findwork.get(row['Do you have any problem in getting a job?'],'00')
+            mapped_value = mapping_prob_findwork.get(row['Do you have any problem in getting a job?'].strip().lower(),'00')
         else:
             # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าว่าง
             mapped_value = ''
@@ -1242,7 +1242,7 @@ def get_workneed_series(df_data):
         # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
         if work_status == '3':
             # ถ้า work_status เท่ากับ '3' ตอบกลับเป็นค่าที่ map ข้อมูลได้ 
-            mapped_value = mapping_workneed.get(row['Do you prefer to work in Thailand or oversea?  Please specify the country.'])
+            mapped_value = mapping_workneed.get(row['Do you prefer to work in Thailand or oversea?  Please specify the country.'].strip().lower())
         else:
             # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าว่าง
             mapped_value = ''
@@ -1258,7 +1258,7 @@ def get_work_country_series(df_data):
         "thailand": "TH",
         "korea, japan": "KR",  # เลือกรหัสแรกคือ KR
         "nepal": "NP",
-        "oversea": "",
+        "oversea": "no data", # ระบุเป็นต่างประเทศ แต่ไม่ได้ระบุประเทศ ใส่เป็น no data
         "thailand or china": "TH",  # เลือกรหัสแรกคือ TH
         "us, eu, aus, canada": "US",  # เลือกรหัสแรกคือ US
         "overseas - us, uk, japan, korea": "US",  # เลือกรหัสแรกคือ US
@@ -1320,7 +1320,7 @@ def get_work_country_series(df_data):
         # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
         if work_status == '3':
             # ถ้า work_status เท่ากับ '3' ตอบกลับเป็นค่าที่ map ข้อมูลได้ 
-            mapped_value = mapping_nationality.get(row['Do you prefer to work in Thailand or oversea?  Please specify the country.'])
+            mapped_value = mapping_nationality.get(row['Do you prefer to work in Thailand or oversea?  Please specify the country.'].strip().lower())
         else:
             # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าว่าง
             mapped_value = ''
@@ -1420,7 +1420,7 @@ def get_work_series(df_data):
         # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
         if work_status == '3':
             # ถ้า work_status เท่ากับ '3' ตอบกลับเป็นค่าที่ map ข้อมูลได้ 
-            mapped_value = mapping_workneed.get(row['Do you prefer to work in Thailand or oversea?  Please specify the country.'],'0')
+            mapped_value = mapping_workneed.get(row['Do you prefer to work in Thailand or oversea?  Please specify the country.'].strip().lower(),'0')
         else:
             # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าว่าง
             mapped_value = ''
@@ -1441,7 +1441,7 @@ def get_skill_development_text(df_data):
         # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
         if work_status == '3':
             # ถ้า work_status เท่ากับ '3' ตอบเป็นค่า value
-            mapped_value = row['What is your skills or curriculum that you want to improve?']
+            mapped_value = str(row['What is your skills or curriculum that you want to improve?']).strip()
         else:
             # ถ้า work_status เป็นค่าอื่นๆ ตอบเป็นค่าว่าง
             mapped_value = ''
@@ -1469,7 +1469,7 @@ def get_disclosure_agreement_text(df_data):
         # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
         if work_status == '3':
             # ถ้า work_status เท่ากับ '3' ตอบกลับเป็นค่าที่ map ข้อมูลได้ 
-            mapped_value = mapping_disclosure_agreement.get(row['Are you willing to reveal this information for employers/organization to applying a job?'],'0')
+            mapped_value = mapping_disclosure_agreement.get(str(row['Are you willing to reveal this information for employers/organization to applying a job?']).strip().lower(),'0')
         else:
             # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าว่าง
             mapped_value = ''
@@ -1493,7 +1493,7 @@ def get_require_education_series(df_data):
 
         # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
         if work_status in ['2', '4']:
-            # ถ้า work_status ไม่เท่ากับ '2' หรือ '4' ตอบกลับเป็นค่าว่าง
+            # ถ้า work_status เท่ากับ '2' หรือ '4' ตอบกลับเป็นค่าว่าง
             mapped_value = ''
         else:
             # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
@@ -1529,14 +1529,16 @@ def get_level_education_series(df_data):
 
         # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
         if work_status in ['2', '4']:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
+            mapped_value = mapping_level_education.get(str(row['What level you want to further your study?']).strip().lower())
+        else:
             if required_education == '1':
                 # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
-                mapped_value = mapping_level_education.get(str(row['Do you want to further your study?']).strip().lower())
+                mapped_value = mapping_level_education.get(str(row['What level you want to further your study?']).strip().lower())
             else:
                 mapped_value = ''
-        else:
             # ถ้า work_status ไม่เท่ากับ '2' หรือ '4' ตอบกลับเป็นค่าว่าง
-            mapped_value = ''
+            # mapped_value = ''
 
         return mapped_value
 
@@ -1571,17 +1573,19 @@ def get_program_education_series(df_data):
     def map_data(row):
         work_status = str(work_status_series.loc[row.name])
         required_education = str(required_education_series.loc[row.name])
-
+        
         # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
         if work_status in ['2', '4']:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
+            mapped_value = mapping_program_education.get(str(row['What field you want to further your study?']).strip().lower())
+        else:
             if required_education == '1':
                 # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
                 mapped_value = mapping_program_education.get(str(row['What field you want to further your study?']).strip().lower())
             else:
                 mapped_value = ''
-        else:
             # ถ้า work_status ไม่เท่ากับ '2' หรือ '4' ตอบกลับเป็นค่าว่าง
-            mapped_value = ''
+            # mapped_value = ''
 
         return mapped_value
 
@@ -1644,6 +1648,7 @@ def get_program_education_id_series(df_data):
         "Business (duplicate)": "000013",
         "Material Science": "000856",  # วัสดุศาสตร์
         "MBA": "000050",  # BUSINESS ADMINISTRATION
+        "Mba": "000050",  # BUSINESS ADMINISTRATION
         "Occupational Psychology": "000411",  # จิตวิทยาอุตสาหกรรมและองค์การ
         "Sport Science": "000919",  # วิทยาศาสตร์การกีฬา
         "Architect": "001119",  # สถาปัตยกรรม
@@ -1857,6 +1862,10 @@ def get_program_education_id_series(df_data):
         "Political science": "000837",  # รัฐศาสตร์
         "International History": "000625",  # ประวัติศาสตร์เอเชียตะวันออกเฉียงใต้ (เป็นตัวแทน)
         ".": "000000",
+        "marketing": "000101",  # การตลาด
+        "fashion": "000536",  # FASHION DESIGN
+        "Not sure yet": "000000",
+        "business": "000013",  # BUSINESS
     }
 
     # เรียกใช้ฟังก์ชัน get_program_education_series เพื่อรับ Series ของสถานะการทำงาน
@@ -1868,7 +1877,9 @@ def get_program_education_id_series(df_data):
         # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
         if program_education == '2':
             # ถ้า program_education เท่ากับ '2' ตอบกลับเป็นค่าที่ map ข้อมูลได้ 
-            mapped_value = mapping_program_education.get(row['Please specify field of study.'])
+            mapped_value = mapping_program_education.get(str(row['Please specify field of study.']).strip())
+            if str(row['Please specify field of study.']).strip() == 'N/A' or pd.isna(row['Please specify field of study.']):
+                mapped_value = "000000"
         else:
             # ถ้า program_education เป็นค่าอื่นๆ ตอบกลับเป็นค่าว่าง
             mapped_value = ''
@@ -1903,17 +1914,19 @@ def get_type_university_series(df_data):
     def map_data(row):
         work_status = str(work_status_series.loc[row.name])
         required_education = str(required_education_series.loc[row.name])
-
+        
         # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
         if work_status in ['2', '4']:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
+            mapped_value = mapping_type_univ.get(str(row['What type of university/institute you want to further your study?']).strip().lower())
+        else:
             if required_education == '1':
                 # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
                 mapped_value = mapping_type_univ.get(str(row['What type of university/institute you want to further your study?']).strip().lower())
             else:
                 mapped_value = ''
-        else:
             # ถ้า work_status ไม่เท่ากับ '2' หรือ '4' ตอบกลับเป็นค่าว่าง
-            mapped_value = ''
+            # mapped_value = ''
 
         return mapped_value
 
@@ -1955,17 +1968,19 @@ def get_cause_education_series(df_data):
     def map_data(row):
         work_status = str(work_status_series.loc[row.name])
         required_education = str(required_education_series.loc[row.name])
-
+    
         # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
         if work_status in ['2', '4']:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
+            mapped_value = mapping_cause_education.get((str(row['What are the reasons for furthering your study?']).strip().lower()),'0')
+        else:
             if required_education == '1':
                 # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
                 mapped_value = mapping_cause_education.get((str(row['What are the reasons for furthering your study?']).strip().lower()),'0')
             else:
                 mapped_value = ''
-        else:
             # ถ้า work_status ไม่เท่ากับ '2' หรือ '4' ตอบกลับเป็นค่าว่าง
-            mapped_value = ''
+            # mapped_value = ''
 
         return mapped_value
 
@@ -2016,6 +2031,7 @@ def get_problem_education_series(df_data):
         "yes (lack of financial support)": "05",  # ขาดแคลนเงินทุน
         "all of the above": "00",  # อื่นๆให้ระบุ (ตอบหลายข้อ)
         "i'm not sure if studying in thailand or abroad would be the better option": "02",  # ข้อมูลสถานที่ศึกษาต่อไม่เพียงพอ
+        """i"m not sure if studying in Thailand or abroad would be the better option""": "02",  # ข้อมูลสถานที่ศึกษาต่อไม่เพียงพอ
         "yes (insufficient required knowledge)": "04",  # ขาดความรู้พื้นฐานในการศึกษาต่อ
         "yes (insufficient institution information)": "02",  # ข้อมูลสถานที่ศึกษาต่อไม่เพียงพอ
         "yes (not yet pass audition)": "03",  # คุณสมบัติในการสมัครเรียน (ผ่านการออดิชั่น)
@@ -2042,17 +2058,19 @@ def get_problem_education_series(df_data):
     def map_data(row):
         work_status = str(work_status_series.loc[row.name])
         required_education = str(required_education_series.loc[row.name])
-
+    
         # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
         if work_status in ['2', '4']:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
+            mapped_value = mapping_problem_education.get(str(row['Do you have any problem in furthering your study?']).strip().lower())
+        else:
             if required_education == '1':
                 # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
                 mapped_value = mapping_problem_education.get(str(row['Do you have any problem in furthering your study?']).strip().lower())
             else:
                 mapped_value = ''
-        else:
             # ถ้า work_status ไม่เท่ากับ '2' หรือ '4' ตอบกลับเป็นค่าว่าง
-            mapped_value = ''
+            # mapped_value = ''
 
         return mapped_value
 
@@ -2083,8 +2101,8 @@ def get_problem_education_text(df_data):
         value = str(problem_education_series.loc[row.name])
 
         # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
-        if value == '0':
-            # ถ้า cause_education_series เท่ากับ '0' ตอบกลับเป็นค่า Do you have any problem in furthering your study?
+        if value == '00':
+            # ถ้า cause_education_series เท่ากับ '00' ตอบกลับเป็นค่า Do you have any problem in furthering your study?
             mapped_value = row['Do you have any problem in furthering your study?']
         else:
             # ถ้า cause_education_series เป็นค่าอื่นๆ ตอบกลับเป็นค่าว่าง
