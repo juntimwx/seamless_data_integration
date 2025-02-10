@@ -38,7 +38,7 @@ df['STD_ID'] = df_data['Student ID']
 df['QN_WORK_STATUS'] = helpers_v3.get_work_status_series(df_data)
 df['QN_MILITARY_STATUS'] = helpers_v3.get_military_status_series(df_data, df_sql)
 df['QN_ORDINATE_STATUS'] = helpers_v3.get_ordinate_status_series(df_data)
-df['QN_OCCUP_TYPE'] = helpers_v3.get_occup_type_seties(df_data)
+df['QN_OCCUP_TYPE'] = helpers_v3.get_occup_type_series(df_data)
 df['QN_OCCUP_TYPE_TXT'] = helpers_v3.get_occup_type_text(df_data)
 df['QN_TALENT_ID'] = helpers_v3.get_talent_series(df_data)
 df['QN_TALENT_TXT'] = helpers_v3.get_talent_text(df_data)
@@ -125,6 +125,9 @@ df['40-AlumniEmail'] = ''
 
 
 df['QY_YEAR'] = '2567'
+
+# ใช้ list comprehension
+df = df[['QY_YEAR'] + [col for col in df.columns if col != 'QY_YEAR']]
 
 print(df.head(5))
 

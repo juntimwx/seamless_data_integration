@@ -104,7 +104,7 @@ def get_ordinate_status_series(df_data):
     return df_data['Being Ordained as a Priest Status -  สถานะการเป็นนักบวช'].map(mapping_ordinate_status)#.fillna('')
 
 
-def get_occup_type_seties(df_data):
+def get_occup_type_series(df_data):
     """
         หมวด 01 (ข้าราชการ /เจ้าหน้าที่หน่วยงานของรัฐ) สำหรับงานข้าราชการหรือเจ้าหน้าที่ภาครัฐ
         หมวด 02 (รัฐวิสาหกิจ) สำหรับพนักงานในรัฐวิสาหกิจ เช่น Staff/Employee in a State-Enterprise Agency
@@ -158,10 +158,10 @@ def get_occup_type_seties(df_data):
     
 
 def get_occup_type_text(df_data):
-    # เรียกใช้ฟังก์ชัน get_occup_type_seties เพื่อรับ Series ของ Occupation Type
-    occup_type_seties = get_occup_type_seties(df_data)
+    # เรียกใช้ฟังก์ชัน get_occup_type_series เพื่อรับ Series ของ Occupation Type
+    occup_type_series = get_occup_type_series(df_data)
     def map_data(row):
-        occup_type = str(occup_type_seties.loc[row.name])
+        occup_type = str(occup_type_series.loc[row.name])
 
         # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
         if occup_type == '00':

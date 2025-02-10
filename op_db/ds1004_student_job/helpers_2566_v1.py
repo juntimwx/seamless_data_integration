@@ -1,0 +1,468 @@
+import pandas as pd
+import re
+
+
+""" จับคู่เลขบัตรประชาชน หรือ passport กับรหัสนักศึกษา
+    ส่งกลับค่า => เลขบัตรประชาชน หรือ passport กับรหัสนักศึกษา
+"""
+def get_citizen_id_series(df_data, df_sql):
+    """
+    คืนค่า Series ของรหัสบัตรประชาชน (หรือพาสปอร์ต) สำหรับแต่ละ 'Student ID-Final' ใน df_data
+    โดยเทียบกับ 'Code' ใน df_sql เพื่อดึง 'CitizenNumber' หรือ 'Passport' ตามเงื่อนไข:
+      - หาก 'CitizenNumber' เป็นค่าว่าง ('') หรือ NaN ให้ใช้ค่า 'Passport' แทน
+      - หากมี 'CitizenNumber' ให้ใช้ค่านั้นทันที
+    """
+    # 1) แปลงชนิดข้อมูลของคอลัมน์ 'Student ID-Final' เป็นสตริง (เผื่อกรณีเป็นตัวเลข จะได้ Map ได้ตรง)
+    student_ids = df_data['Student ID-Final'].astype(str)
+
+    # 2) สร้าง Dictionary สำหรับ 'CitizenNumber' โดยใช้ 'Code' เป็น Key
+    citizen_dict = df_sql.set_index('Code')['CitizenNumber'].to_dict()
+
+    # 3) สร้าง Dictionary สำหรับ 'Passport' โดยใช้ 'Code' เป็น Key
+    passport_dict = df_sql.set_index('Code')['Passport'].to_dict()
+
+    # 4) ฟังก์ชันภายใน เพื่อดึง 'CitizenNumber' หรือ 'Passport' ตามเงื่อนไข
+    def get_citizen_or_passport(student_id):
+        citizen_number = citizen_dict.get(student_id, None)
+        # เช็คว่าเป็น NaN หรือเป็น String ว่าง
+        if pd.isna(citizen_number) or citizen_number == '':
+            # ถ้าไม่มี CitizenNumber ให้ใช้ Passport แทน
+            return passport_dict.get(student_id, '')
+        else:
+            return citizen_number
+
+    # 5) สร้าง Series ใหม่สำหรับ 'CITIZEN_ID'
+    citizen_id_series = student_ids.apply(get_citizen_or_passport)
+
+    return citizen_id_series
+
+
+""" จับคู่สถานะการมีงานทำ (จาก google form มีตัวเลือกให้เลือก) column => Currently Employed Status
+    ส่งกลับเป็นค่าตัวเลข 1-7
+"""
+def get_work_status_series(df_data):
+    mapping_work_status = {
+        'Unemployed before graduation and employed after graduation' : '1',
+        'Employed and currently pursuing a higher degree' : '2',
+        'Unemployed' : '3',
+        'Currently pursuing a higher degree' : '4',
+        'Employed in the same field before and after graduation' : '5',
+        'Employed before and change the field work after graduation' : '6',
+        'Employed before graduation and promoted after graduation in the same field' : '7'
+    }
+    
+    return df_data['Currently Employed Status'].map(mapping_work_status)
+
+
+""" จับคู่สถานะทางทหาร (จาก google form มีตัวเลือกให้เลือก) column => Military Status (Male only) -  สถานะการเกณฑ์ทหาร(เฉพาะเพศชาย)
+    ส่งกลับเป็นค่าตัวเลข 0-1 หรือ - กรณีเป็นผู้หญิง
+"""
+def get_military_status_series(df_data, df_sql):
+    """
+    คืนค่า Series แสดงสถานะทางทหาร (เป็น string) ตามเงื่อนไข:
+      - ถ้า 'Student ID-Final' (ใน df_data) ตรงกับ 'Code' (ใน df_sql)
+      - และค่า Gender ใน df_sql เป็น 'male'
+        => ใช้ mapping_military_status ในการแปลง
+      - กรณีอื่นให้คืน '-'
+    """
+    # 1 กำหนด mapping สำหรับค่าข้อความทางทหาร -> สตริง '0' หรือ '1'
+    mapping_military_status = {
+        'Taken a draft deferment period or Exempted from military service or Conscripted - อยู่ในช่วงผ่อนผันเกณฑ์ทหาร หรือได้รับการยกเว้น หรือผ่านการเกณฑ์ทหารแล้ว' : '0',
+        'Serving in a military - อยู่ในระหว่างการเป็นทหารเกณฑ์' : '1'
+    }
+    
+    # 2 แปลง 'Student ID-Final' ใน df_data ให้เป็น string เพื่อให้ match กับ df_sql['Code']
+    df_data['Student ID-Final'] = df_data['Student ID-Final'].astype(str)
+    
+    # 3 สร้าง dictionary จาก df_sql: key = 'Code', value = 'Gender'
+    gender_dict = df_sql.set_index('Code')['Gender'].to_dict()
+    
+    # 4 ฟังก์ชันภายในสำหรับ apply
+    def map_military_status(row):
+        # ดึง Student ID-Final และค่าที่บอกสถานะทหาร
+        student_id = row['Student ID-Final']
+        mil_status = row['Military Status (Male only) -  สถานะการเกณฑ์ทหาร(เฉพาะเพศชาย)']
+        
+        # ดู gender ของ student_id นี้ใน df_sql
+        gender_value = gender_dict.get(student_id, None)
+        
+        # ถ้าเป็นผู้ชาย (male) ให้แปลงตาม mapping
+        # ถ้าไม่มีใน mapping ให้ใช้ '' หรือ ค่าว่าง เป็น default
+        if gender_value == 'male':
+            return mapping_military_status.get(mil_status, '')
+        else:
+            # ถ้า gender ไม่ใช่ male หรือหาไม่เจอใน dictionary ให้คืน '-'
+            return '-'
+    
+    # 5 ใช้ .apply(...) เพื่อสร้าง Series ใหม่
+    return df_data.apply(map_military_status, axis=1)
+
+
+""" จับคู่สถานะการเป็นนักบวช (จาก google form มีตัวเลือกให้เลือก) column => Being Ordained as a Priest Status -  สถานะการเป็นนักบวช
+    ส่งค่ากลับเป็น 1-5
+"""
+def get_ordinate_status_series(df_data):
+    mapping_ordinate_status ={
+        'Not being as a priest - ไม่ได้เป็นนักบวช': '1',
+        'Being as a priest and will disrobe in 3 months - อยู่ในระหว่างการเป็นนักบวช ระยะเวลาถึงกำหนดลาสิกขา น้อยกว่า 3 เดือน': '2',
+        'Being as a priest and will disrobe in 4 - 12 months - อยู่ในระหว่างการเป็นนักบวช ระยะเวลาถึงกำหนดลาสิกขา 4 เดือน - 1 ปี': '3',
+        'Being as a priest and will disrobe more than 1 year - อยู่ในระหว่างการเป็นนักบวช ระยะเวลาถึงกำหนดลาสิกขา มากกว่า 1 ปี': '4',
+        'Being as a priest and do not have a plan to disrobe  - อยู่ในระหว่างการเป็นนักบวช ระยะเวลาถึงกำหนดลาสิกขา ไม่มีกำหนด': '5'
+    }
+    
+    return df_data['Being Ordained as a Priest Status -  สถานะการเป็นนักบวช'].map(mapping_ordinate_status)
+
+
+""" จับคู่ประเภทงานที่ทำ (จาก google form มีตัวเลือกให้เลือก) column => Type of Job
+    เงื่อนไขคือ ถ้าสถานะการทำงาน get_work_status_series เป็น 3 หรือ 4 ต้องส่งค่ากลับเป็นว่าง แต่ถ้าไม่ใช่ ให้ส่งค่าที่จับคู่ได้กลับมา
+    การจับคู่คือ ถ้าตรงกับตัวเลือกที่กำหนดใน google form ให้ส่งค่ากลับมา แต่ถ้าไม่ใช่ให้ส่ง 00 เท่านั้น
+"""
+def get_occup_type_series(df_data):
+    """
+        หมวด 01 (ข้าราชการ /เจ้าหน้าที่หน่วยงานของรัฐ) สำหรับงานข้าราชการหรือเจ้าหน้าที่ภาครัฐ
+        หมวด 02 (รัฐวิสาหกิจ) สำหรับพนักงานในรัฐวิสาหกิจ เช่น Staff/Employee in a State-Enterprise Agency
+        หมวด 03 (พนักงานบริษัท/องค์กรธุรกิจเอกชน) รวมถึงงานในภาคเอกชนที่มักเป็นพนักงาน เช่น Staff/Employee in a private company, Guest Service Agent (Hotel), developer, Digital Marketing, Entertainment, Hotel industry, Life insurance, Flight attendant, Five stars hotel industry, hospitality
+        หมวด 04 (ดำเนินธุรกิจอิสระ/เจ้าของกิจการ) รวมถึงงานที่เกี่ยวกับการดำเนินธุรกิจส่วนตัวหรือเป็น Freelance เช่น Your own business/family business, Director of Photography/ Cinematographer, Bussiness, Consulting, Freelance, Start-up Business, Investment academy..., Real Esate business, Barber/Hairstylist
+        หมวด 05 (พนักงานองค์การต่างประเทศ/ระหว่างประเทศ) สำหรับงานในองค์การต่างประเทศ
+    """
+    mapping_occup_type = {
+        'Civil Servant/Employee in a government organization' : '01',
+        'Staff/Employee in a State-Enterprise Agency' : '02',
+        'Staff/Employee in a private company' : '03',
+        'Your own business/family business' : '04',
+        'Employee in an international organization' : '05',
+
+    }
+    
+    # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน
+    work_status_series = get_work_status_series(df_data)
+    def map_data(row):
+        work_status = str(work_status_series.loc[row.name])
+
+        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
+        if work_status in ['3', '4']:
+            # ถ้า work_status เท่ากับ '3' หรือ '4' ตอบกลับเป็นค่าว่าง
+            mapped_value = ''
+        else:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้ หากไม่พบให้ส่งเป็น 00 เพื่อกรอกข้อมูลเพิ่มเติม
+            mapped_value = mapping_occup_type.get(row['Type of Job'], '00')
+
+        return mapped_value
+
+    return df_data.apply(map_data, axis=1)
+    
+
+""" จับคู่ประเภทงานที่ทำ เพิ่มเติม (จาก google form มีตัวเลือกให้เลือก) column => Type of Job
+    เงื่อนไขคือ ถ้าสถานะการทำงาน get_occup_type_series เป็น 00 ต้องส่งค่าที่นักศึกษากรอกกลับมา แต่ถ้านอกเหนือให้เป็นค่าว่างเท่านั้น
+"""
+# เงื่อนไขคือ ถ้า QN_OCCUP_TYPE หรือ get_occup_type_series ค่าเท่ากับ 00 จะต้องกรอกข้อมูลเพิ่มเติม ถ้าเป็นค่าอื่น ตอบเป็นค่าว่าง เท่านั้น
+def get_occup_type_text(df_data):
+    # เรียกใช้ฟังก์ชัน get_occup_type_series เพื่อรับ Series ของ Occupation Type
+    occup_type_seties = get_occup_type_series(df_data)
+    
+    def map_data(row):
+        occup_type = str(occup_type_seties.loc[row.name])
+
+        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
+        if occup_type == '00':
+            # ถ้า occup_type เท่ากับ '00' ตอบกลับเป็นค่า Type of Job
+            mapped_value = row['Type of Job']
+        else:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าว่าง
+            mapped_value = ''
+
+        return mapped_value
+    
+    return df_data.apply(map_data, axis=1)
+
+
+""" จับคู่ความสามารถพิเศษ (จาก google form มีตัวเลือกให้เลือก) column => Which skill can most help you to get employed?
+    เงื่อนไขคือ ถ้าสถานะการทำงาน get_work_status_series เป็น 3 หรือ 4 ต้องส่งค่ากลับเป็นว่าง แต่ถ้าไม่ใช่ ให้ส่งค่าที่จับคู่ได้กลับมา
+    การจับคู่คือ ถ้าตรงกับตัวเลือกที่กำหนดใน google form ให้ส่งค่ากลับมา แต่ถ้าไม่ใช่ให้ส่ง 00 เท่านั้น
+"""
+def get_talent_series(df_data):
+    mapping_talent = {
+        'Foreign Languages' : '01',
+        'Computer literacy' : '02',
+        'Extra curriculum activities' : '03',
+        'Art' : '04',
+        'Sport' : '05',
+        'Traditional dance/Music' : '06',
+    }
+
+    # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน
+    work_status_series = get_work_status_series(df_data)
+    def map_data(row):
+        work_status = str(work_status_series.loc[row.name])
+
+        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
+        if work_status in ['3', '4']:
+            # ถ้า work_status เท่ากับ '3' หรือ '4' ตอบกลับเป็นค่าว่าง
+            mapped_value = ''
+        else:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้ หากไม่พบให้ส่งเป็น 00 เพื่อกรอกข้อมูลเพิ่มเติม
+            mapped_value = mapping_talent.get(row['Which skill can most help you to get employed?'], '00')
+
+        return mapped_value
+
+    return df_data.apply(map_data, axis=1)
+
+
+""" จับคู่ความสามารถพิเศษ เพิ่มเติม (จาก google form มีตัวเลือกให้เลือก) column => Which skill can most help you to get employed?
+    เงื่อนไขคือ ถ้าสถานะการทำงาน get_talent_series เป็น 00 ต้องส่งค่าที่นักศึกษากรอกกลับมา แต่ถ้านอกเหนือให้เป็นค่าว่างเท่านั้น
+"""
+def get_talent_text(df_data):
+    talent_series = get_talent_series(df_data)
+    def map_data(row):
+        talent = str(talent_series.loc[row.name])
+
+        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
+        if talent == '00':
+            # ถ้า occup_type เท่ากับ '0' ตอบกลับเป็นค่า Which skill can most help you to get employed?
+            mapped_value = row['Which skill can most help you to get employed?'].strip()
+        else:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าว่าง
+            mapped_value = ''
+
+        return mapped_value
+    
+    return df_data.apply(map_data, axis=1)
+
+
+# รอ map ข้อมูล position
+
+
+""" ระบุชื่อบริษัทที่ทำงาน (google form ให้กรอกข้อมูลเอง) column => Organization name
+    เงื่อนไขคือ ถ้าสถานะการทำงาน get_work_status_series เป็น 3 หรือ 4 ต้องส่งค่ากลับเป็นว่าง แต่ถ้าไม่ใช่ ให้ส่งค่าที่นักศึกษากรอกข้อมูลกลับมา
+"""
+def get_work_name_text(df_data):
+    # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน
+    work_status_series = get_work_status_series(df_data)
+    
+    def map_data(row):
+        work_status = str(work_status_series.loc[row.name])
+
+        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
+        if work_status in ['3', '4']:
+            # ถ้า work_status เท่ากับ '3' หรือ '4' ตอบกลับเป็นค่าว่าง
+            mapped_value = ''
+        else:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่นักศึกษากรอกข้อมูล
+            mapped_value = row['Organization name'].strip()
+
+        return mapped_value
+
+    return df_data.apply(map_data, axis=1)
+
+
+""" จับคู่ประเภทกิจการ (จาก google form มีตัวเลือกให้เลือก) column => Industry
+    เงื่อนไขคือ ถ้าสถานะการทำงาน get_work_status_series เป็น 3 หรือ 4 ต้องส่งค่ากลับเป็นว่าง แต่ถ้าไม่ใช่ ให้ส่งค่าที่จับคู่ได้กลับมา
+    การจับคู่คือ ถ้าตรงกับตัวเลือกที่กำหนดใน google form ให้ส่งค่ากลับมา โดยไม่มีค่าเริ่มต้น หรือค่าอื่นๆ เพื่อกรอกข้อมูลเพิ่มเติม
+"""
+def get_work_type_series(df_data):
+    mapping_work_type = {
+        'Agriculture / Forestry / Fisheries': 'A',
+        'Mining': 'B',
+        'Production': 'C',
+        'Power & Energy / Oil & Gas / Heating, Ventilation & Air Conditioning': 'D',
+        'Water Supply / Wastewater Treatment / Waste Management / Related Activities': 'E',
+        'Construction': 'F',
+        'Motor Vehicles Retail and Whole Sale / Auto Repair': 'G',
+        'Logistics and Warehouse': 'H',
+        'Hospitality / Catering': 'I',
+        'Information and Communication': 'J',
+        'Financial Services/Insurance': 'K',
+        'Real Estate': 'L',
+        'Professional / Science / Academic': 'M',
+        'Management Consultancy & Business Support Service': 'N',
+        'Civil Services (Government, Armed Forces) / Social Security': 'O',
+        'Education': 'P',
+        'Healthcare / Charity / Non-Profit Organization': 'Q',
+        'Art / Entertainment / Recreation': 'R',
+        'General Business Services': 'S',
+        'Small Family Owned Business': 'T',
+        'International Organization / International Association': 'U'
+    }
+    
+   # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน
+    work_status_series = get_work_status_series(df_data)
+    def map_data(row):
+        work_status = str(work_status_series.loc[row.name])
+
+        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
+        if work_status in ['3', '4']:
+            # ถ้า work_status เท่ากับ '3' หรือ '4' ตอบกลับเป็นค่าว่าง
+            mapped_value = ''
+        else:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
+            mapped_value = mapping_work_type.get(row['Industry'].strip())
+
+        return mapped_value
+
+    return df_data.apply(map_data, axis=1)
+
+
+# รอ map ข้อมูลที่อยู่ของที่ทำงาน
+
+
+""" ระบุชื่อ email ที่ทำงาน (google form ให้กรอกข้อมูลเอง) column => Email of your workplace
+    เงื่อนไขคือ ถ้าสถานะการทำงาน get_work_status_series เป็น 3 หรือ 4 ต้องส่งค่ากลับเป็นว่าง แต่ถ้าไม่ใช่ ให้ส่งค่าที่นักศึกษากรอกข้อมูลกลับมา
+"""
+def get_work_email_text(df_data):
+    # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน
+    work_status_series = get_work_status_series(df_data)
+    
+    def map_data(row):
+        work_status = str(work_status_series.loc[row.name])
+
+        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
+        if work_status in ['3', '4']:
+            # ถ้า work_status เท่ากับ '3' หรือ '4' ตอบกลับเป็นค่าว่าง
+            mapped_value = ''
+        else:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่นักศึกษากรอกข้อมูล
+            mapped_value = row['Email of your workplace']
+            if pd.isna(row['Email of your workplace']) or row['Email of your workplace'] == '-':
+                mapped_value = 'no data'
+
+        return mapped_value
+
+    return df_data.apply(map_data, axis=1)
+
+
+""" ระบุชื่อเงื่อนเดือนที่ได้รับ (google form ให้กรอกข้อมูลเอง) column => Monthly salary or earned income
+    เงื่อนไขคือ ถ้าสถานะการทำงาน get_work_status_series เป็น 3 หรือ 4 ต้องส่งค่ากลับเป็นว่าง แต่ถ้าไม่ใช่ ให้ส่งค่าที่นักศึกษากรอกข้อมูลกลับมา
+"""
+def get_work_salary_text(df_data):
+    # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน
+    work_status_series = get_work_status_series(df_data)
+    
+    def map_data(row):
+        work_status = str(work_status_series.loc[row.name])
+
+        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
+        if work_status in ['3', '4']:
+            # ถ้า work_status เท่ากับ '3' หรือ '4' ตอบกลับเป็นค่าว่าง
+            mapped_value = ''
+        else:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่นักศึกษากรอกข้อมูล
+            mapped_value = int(row['Monthly salary or earned income'])
+
+        return mapped_value
+
+    return df_data.apply(map_data, axis=1)
+
+
+""" จับคู่ความพอใจต่องานที่ทำ (จาก google form มีตัวเลือกให้เลือก) column => Are you satisfied with your work?
+    เงื่อนไขคือ ถ้าสถานะการทำงาน get_work_status_series เป็น 3 หรือ 4 ต้องส่งค่ากลับเป็นว่าง แต่ถ้าไม่ใช่ ให้ส่งค่าที่จับคู่ได้กลับมา
+    การจับคู่คือ ถ้าตรงกับตัวเลือกที่กำหนดใน google form ให้ส่งค่ากลับมา แต่ถ้าไม่ใช่ให้ส่ง 00 เท่านั้น
+"""
+def get_satisfy_type_series(df_data):
+    mapping_work_satisfy = {
+        'Yes': '01',
+        'No (Undesirable working system)': '02',
+        'No (Undesirable co-worker)': '03',
+        'No (Not match with your qualification/ability)': '04',
+        'No (Little payment)': '05',
+        'No (No stability)': '06',
+        'No (No opportunity for promotion)': '07'
+    }
+    
+    # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน
+    work_status_series = get_work_status_series(df_data)
+    def map_data(row):
+        work_status = str(work_status_series.loc[row.name])
+
+        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
+        if work_status in ['3', '4']:
+            # ถ้า work_status เท่ากับ '3' หรือ '4' ตอบกลับเป็นค่าว่าง
+            mapped_value = ''
+        else:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้ หากไม่พบให้ส่งเป็น 00 เพื่อกรอกข้อมูลเพิ่มเติม
+            mapped_value = mapping_work_satisfy.get(row['Are you satisfied with your work?'].strip(), '00')
+
+        return mapped_value
+
+    return df_data.apply(map_data, axis=1)
+
+
+""" จับคู่ความพอใจต่องานที่ทำ เพิ่มเติม (จาก google form มีตัวเลือกให้เลือก) column => Are you satisfied with your work?
+    เงื่อนไขคือ ถ้าสถานะการทำงาน get_satisfy_type_series เป็น 00 ต้องส่งค่าที่นักศึกษากรอกกลับมา แต่ถ้านอกเหนือให้เป็นค่าว่างเท่านั้น
+"""
+def get_satisfy_text(df_data):
+    satisfy_type_series = get_satisfy_type_series(df_data)
+    def map_data(row):
+        satisfy_type = str(satisfy_type_series.loc[row.name])
+
+        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
+        if satisfy_type == '00':
+            # ถ้า occup_type เท่ากับ '00' Are you satisfied with your work?
+            mapped_value = row['Are you satisfied with your work?']
+        else:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าว่าง
+            mapped_value = ''
+
+        return mapped_value
+    
+    return df_data.apply(map_data, axis=1)
+
+
+""" จับคู่ระยะเวลาในการหางานทำ (จาก google form มีตัวเลือกให้เลือก) column => After you graduated, how long did it take you to get a job?
+    เงื่อนไขคือ ถ้าสถานะการทำงาน get_work_status_series เป็น 3 หรือ 4 ต้องส่งค่ากลับเป็นว่าง แต่ถ้าไม่ใช่ ให้ส่งค่าที่จับคู่ได้กลับมา
+    การจับคู่คือ ถ้าตรงกับตัวเลือกที่กำหนดใน google form ให้ส่งค่ากลับมา โดยไม่มีค่าเริ่มต้น หรือค่าอื่นๆ เพื่อกรอกข้อมูลเพิ่มเติม
+"""
+def get_time_find_work_series(df_data):
+    mapping_time_findwork = {
+        'getting a job immediately': '01',
+        '1 - 2 months': '02',
+        '3 - 6 months': '03',
+        '7 - 9 months': '04',
+        '10 - 12 months': '05',
+        'Over 1 year': '06',
+        'An old job (have been working there even before or during the university study)': '07'
+    }
+
+    # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน
+    work_status_series = get_work_status_series(df_data)
+    def map_data(row):
+        work_status = str(work_status_series.loc[row.name])
+
+        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
+        if work_status in ['3', '4']:
+            # ถ้า work_status เท่ากับ '3' หรือ '4' ตอบกลับเป็นค่าว่าง
+            mapped_value = ''
+        else:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
+            mapped_value = mapping_time_findwork.get(row['After you graduated, how long did it take you to get a job?'].strip())
+
+        return mapped_value
+
+    return df_data.apply(map_data, axis=1)
+
+
+""" จับคู่งานที่ทำตรงกับที่สำเร็จการศึกษา (จาก google form มีตัวเลือกให้เลือก) column => Have you worked in the field that you graduated?
+    เงื่อนไขคือ ถ้าสถานะการทำงาน get_work_status_series เป็น 3 หรือ 4 ต้องส่งค่ากลับเป็นว่าง แต่ถ้าไม่ใช่ ให้ส่งค่าที่จับคู่ได้กลับมา
+    การจับคู่คือ ถ้าตรงกับตัวเลือกที่กำหนดใน google form ให้ส่งค่ากลับมา โดยไม่มีค่าเริ่มต้น หรือค่าอื่นๆ เพื่อกรอกข้อมูลเพิ่มเติม
+"""
+def get_match_education_series(df_data):
+    mapping_time_findwork = {
+        'Yes': '1',
+        'No': '2'
+    }
+
+    # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน
+    work_status_series = get_work_status_series(df_data)
+    def map_data(row):
+        work_status = str(work_status_series.loc[row.name])
+
+        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
+        if work_status in ['3', '4']:
+            # ถ้า work_status เท่ากับ '3' หรือ '4' ตอบกลับเป็นค่าว่าง
+            mapped_value = ''
+        else:
+            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
+            mapped_value = mapping_time_findwork.get(row['Have you worked in the field that you graduated?'].strip())
+
+        return mapped_value
+
+    return df_data.apply(map_data, axis=1)
