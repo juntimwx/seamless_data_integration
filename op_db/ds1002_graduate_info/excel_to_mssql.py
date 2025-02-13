@@ -15,7 +15,7 @@ load_dotenv()
 engine = create_engine(f"mssql+pyodbc://{os.getenv('DATA_USERNAME')}:{quote(os.getenv('DATA_PASSWORD'))}@{os.getenv('DATA_HOST')}/{os.getenv('OP_DATABASE')}?driver=ODBC+Driver+17+for+SQL+Server")
 
 
-data = pd.read_excel('../../data/op_db/data/ds1001_student_info/ds1001_from_p-phon_update.xlsx')
+data = pd.read_excel('../../data/op_db/data/ds1002_graduate_schema/ds1002_from_p-phon.xlsx')
 df = pd.DataFrame(data)
 
 print("Dataframe Preview:")
@@ -23,7 +23,7 @@ print(df.head())
 # try to insert data to database.
 try:
     # insert data to database appending new rows.
-    result = df.to_sql(os.getenv('DS_1001'), engine, schema=os.getenv('SCHEMA_DEFAULT'), index=False, chunksize=1000, if_exists='append')
+    result = df.to_sql(os.getenv('DS_1002'), engine, schema=os.getenv('SCHEMA_DEFAULT'), index=False, chunksize=1000, if_exists='append')
     
     # display a message when data inserted successfully and show number of row inserted to database.
     print(f"Data inserted successfully. Number of rows inserted: {len(df)}")
