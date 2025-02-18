@@ -628,7 +628,7 @@ def get_work_name_text(df_data):
 
 def get_work_type_series(df_data):
     mapping_work_type = {
-        "small family owned business": "N",  # กิจกรรมการบริหารและบริการสนับสนุนอื่น ๆ (ทั่วไป)
+        "small family owned business": "T",  ## สำหรับ SA ตีความ small family owned business เป็น T # กิจกรรมการบริหารและบริการสนับสนุนอื่น ๆ (ทั่วไป)
         "power & energy / oil & gas / heating, ventilation & air conditioning": "D",  # ไฟฟ้า ก๊าซ ไอน้ำและระบบการปรับอากาศ
         "hospitality / catering": "I",        # ที่พักแรมและบริการด้านอาหาร
         "education": "P",                      # การศึกษา
