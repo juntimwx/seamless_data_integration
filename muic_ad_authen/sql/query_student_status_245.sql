@@ -66,6 +66,6 @@ left join master.ResidentTypes residentType on std.ResidentTypeId = residentType
 left join master.StudentFeeTypes studentFeeType on std.StudentFeeTypeId = studentFeeType.Id
 left join student.AdmissionInformations admissionInfo on std.Id = admissionInfo.StudentId
 left join dbo.Terms term on admissionInfo.AdmissionTermId = term.Id
-left join master.AdmissionTypes admissionType on admissionInfo.AdmissionTermId = admissionType.Id
+left join master.AdmissionTypes admissionType on admissionInfo.AdmissionTypeId = admissionType.Id
 left join dbo.StagingStudent stagingStudent on std.Code = stagingStudent.studentCode
 left join dbo.ALLMajor major on SUBSTRING(stagingStudent.programCode,1,4) = major.Major
