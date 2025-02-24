@@ -1,5 +1,5 @@
 use muic_research
-create table publication_2024_05_24(
+create table publication_2024_05_21(
     rank  VARCHAR(50),
     group_rank  VARCHAR(50),
     description  VARCHAR(255),
@@ -29,7 +29,7 @@ create table publication_2024_05_24(
     product_code  VARCHAR(50),
     firstname  VARCHAR(50),
     lastname  VARCHAR(50),
-    title  VARCHAR(255),
+    title  varchar(MAX),
     publication_month  INT,
     publication_year  INT,
     publication_calendar_year  INT,

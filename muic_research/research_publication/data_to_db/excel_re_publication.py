@@ -10,11 +10,11 @@ import os
 load_dotenv()
 
 # create connection engin for database SQL Server.
-engine = create_engine(f"mssql+pyodbc://{os.getenv('LOCAL_USERNAME')}:{quote(os.getenv('LOCAL_PASSWORD'))}@{os.getenv('LOCAL_HOST')}/{os.getenv('FINANCE_DATABASE')}?driver=ODBC+Driver+17+for+SQL+Server")
-#engine = create_engine(f"mssql+pyodbc://{os.getenv('DATA_USERNAME')}:{quote(os.getenv('DATA_PASSWORD'))}@{os.getenv('DATA_HOST')}/{os.getenv('FINANCE_DATABASE')}?driver=ODBC+Driver+17+for+SQL+Server")
+engine = create_engine(f"mssql+pyodbc://{os.getenv('LOCAL_USERNAME')}:{quote(os.getenv('LOCAL_PASSWORD'))}@{os.getenv('LOCAL_HOST')}/{os.getenv('RESEARCH_DATABASE')}?driver=ODBC+Driver+17+for+SQL+Server")
+#engine = create_engine(f"mssql+pyodbc://{os.getenv('DATA_USERNAME')}:{quote(os.getenv('DATA_PASSWORD'))}@{os.getenv('DATA_HOST')}/{os.getenv('RESEARCH_DATABASE')}?driver=ODBC+Driver+17+for+SQL+Server")
 
 # read data from excel file.
-data = pd.read_excel('../../../data/muic_research/Publication_Data/Publications_2024.05.21.xlsx')
+data = pd.read_excel('../../../data/muic_research/Publication_Data/Publications_20240521_clean_data.xlsx')
 df = pd.DataFrame(data)
 
 # rename DataFrame column to match database schema.
@@ -60,14 +60,14 @@ df = df.rename(columns={
 
 # Convert date format if a date column exists (example column name: 'date').
 if 'effective_date' in df.columns:
-    df['effective_date'] = pd.to_datetime(df['effective_date'], format='%d.%m.%Y').dt.strftime('%Y-%m-%d')
-
+    df['effective_date'] = pd.to_datetime(df['effective_date'], format='%d-%m-%Y').dt.strftime('%Y-%m-%d')
+    
 print("Dataframe Preview:")
 print(df.head())
 # try to insert data to database.
 try:
     # insert data to database appending new rows.
-    result = df.to_sql(os.getenv('publication_2024_05_21'), engine, schema=os.getenv('SCHEMA_DEFAULT'), index=False, chunksize=1000, if_exists='append')
+    result = df.to_sql(os.getenv('PUBLICATION_TABLE'), engine, schema=os.getenv('SCHEMA_DEFAULT'), index=False, chunksize=1000, if_exists='append')
     
     # display a message when data inserted successfully and show number of row inserted to database.
     print(f"Data inserted successfully. Number of rows inserted: {len(df)}")
