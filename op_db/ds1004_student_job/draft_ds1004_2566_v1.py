@@ -48,12 +48,15 @@ df['QN_WORKTYPE_ID'] = helpers_2566_v1.get_work_type_series(df_data)
 # df['QN_WORK_ADD'] = helpers_2566_v1.get_work_address_name_text(df_data)
 # df['QN_WORK_MOO'] = helpers_2566_v1.get_work_address_moo_text(df_data)
 # df['QN_WORK_BUILDING'] = helpers_2566_v1.get_work_address_building_text(df_data)
-# df['QN_WORK_SOI'] = helpers_2566_v1.get_work_address_soi_text(df_data)
-# df['QN_WORK_STREET'] = helpers_2566_v1.get_work_address_street_text(df_data)
-# df['QN_WORK_TAMBON'] = helpers_2566_v1.get_work_address_tambon_text(df_data)
-# df['QN_WORK_COUNTRY_ID'] = helpers_2566_v1.get_work_address_country_series(df_data)
-# df['QN_WORK_ZIPCODE'] = helpers_2566_v1.get_work_address_zipcode_text(df_data)
-df['QN_WORK_FAX'] = ''
+df['QN_WORK_SOI'] = helpers_2566_v1.get_work_address_soi_text(df_data)
+df['QN_WORK_STREET'] = helpers_2566_v1.get_work_address_street_text(df_data)
+df['QN_WORK_TAMBON'] = helpers_2566_v1.get_work_address_tambon_text(df_data)
+df['district'] = helpers_2566_v1.get_work_address_district(df_data)
+df['province'] = helpers_2566_v1.get_work_address_province(df_data)
+df['QN_WORK_COUNTRY_ID'] = helpers_2566_v1.get_work_address_country_series(df_data)
+df['QN_WORK_ZIPCODE'] = helpers_2566_v1.get_work_address_zipcode_text(df_data)
+df['QN_WORK_TEL'] = helpers_2566_v1.get_work_tel_text(df_data)
+df['QN_WORK_FAX'] = helpers_2566_v1.get_work_fax_text(df_data)
 df['QN_WORK_EMAIL'] = helpers_2566_v1.get_work_email_text(df_data)
 df['QN_SALARY'] = helpers_2566_v1.get_work_salary_text(df_data)
 df['QN_WORK_SATISFY'] = helpers_2566_v1.get_satisfy_type_series(df_data)
@@ -66,9 +69,39 @@ df['QN_CAUSE_NOWORK_TXT'] = helpers_2566_v1.get_cause_nowork_text(df_data)
 df['QN_PROB_FINDWORK'] = helpers_2566_v1.get_problem_find_work_series(df_data)
 df['QN_PROB_FINDWORK_TXT'] = helpers_2566_v1.get_problem_find_work_text(df_data)
 
+df['QN_WORKNEED_ID'] = helpers_2566_v1.get_workneed_series(df_data)
+df['QN_WORKNEED_COUNTRY_ID'] = helpers_2566_v1.get_work_country_series(df_data)
+df['QN_WORKNEED_POSITION'] = helpers_2566_v1.get_work_position_series(df_data)
+df['QN_SKILL_DEVELOPMENT'] = helpers_2566_v1.get_skill_development_text(df_data)
+df['QN_DISCLOSURE_AGREEMENT_ID'] = helpers_2566_v1.get_disclosure_agreement_text(df_data)
+df['QN_REQUIRE_EDU'] = helpers_2566_v1.get_require_education_series(df_data)
+df['QN_LEVEL_EDU'] = helpers_2566_v1.get_level_education_series(df_data)
+df['QN_PROGRAM_EDU'] = helpers_2566_v1.get_program_education_series(df_data)
+# df['QN_PROGRAM_EDU_ID'] = helpers_v3.get_program_education_id_series(df_data)
+df['QN_TYPE_UNIV'] = helpers_2566_v1.get_type_university_series(df_data)
+df['QN_CAUSE_EDU'] = helpers_2566_v1.get_cause_education_series(df_data)
+df['QN_CAUSE_EDU_TXT'] = helpers_2566_v1.get_cause_education_text(df_data)
+# df['QN_PROB_EDU'] = helpers_v3.get_problem_education_series(df_data)
+# df['QN_PROB_EDU_TXT'] = helpers_v3.get_problem_education_text(df_data)
+df['QN_ADDPROGRAM1'] = helpers_2566_v1.get_parse_program_data(df_data)['QN_ADDPROGRAM1']
+df['QN_ADDPROGRAM2'] = helpers_2566_v1.get_parse_program_data(df_data)['QN_ADDPROGRAM2']
+df['QN_ADDPROGRAM3'] = helpers_2566_v1.get_parse_program_data(df_data)['QN_ADDPROGRAM3']
+df['QN_ADDPROGRAM4'] = helpers_2566_v1.get_parse_program_data(df_data)['QN_ADDPROGRAM4']
+df['QN_ADDPROGRAM5'] = helpers_2566_v1.get_parse_program_data(df_data)['QN_ADDPROGRAM5']
+df['QN_ADDPROGRAM6'] = helpers_2566_v1.get_parse_program_data(df_data)['QN_ADDPROGRAM6']
+df['QN_ADDPROGRAM7'] = helpers_2566_v1.get_parse_program_data(df_data)['QN_ADDPROGRAM7']
+df['QN_ADDPROGRAM8'] = helpers_2566_v1.get_parse_program_data(df_data)['QN_ADDPROGRAM8']
+df['QN_ADDPROGRAM9'] = helpers_2566_v1.get_parse_program_data(df_data)['QN_ADDPROGRAM9']
+df['QN_ADDPROGRAM7_TXT'] = helpers_2566_v1.get_parse_program_data(df_data)['QN_ADDPROGRAM7_TXT']
+df['QN_COMMENT_PROGRAM'] = df_data['Suggestions regarding course and field of study (optional)']
+df['QN_COMMENT_LEARN'] = df_data['Suggestions regarding teaching (optional)']
+df['QN_COMMENT_ACTIVITY'] = df_data['Suggestions regarding student development activities (optional)']
+
 df['QY_YEAR'] = '2567'
 
 # ใช้ list comprehension
 df = df[['QY_YEAR'] + [col for col in df.columns if col != 'QY_YEAR']]
 
 print(df.head(15))
+
+df.to_excel(f'~/Downloads/draft_ds1004_2566_{datetime.today().strftime('%Y-%m-%d_%H-%M-%S')}.xlsx')
