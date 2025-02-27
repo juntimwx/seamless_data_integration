@@ -42,7 +42,7 @@ student_data = pd.read_sql('''
         ,'-' as 'รหัสสาขา'
         ,'0' as 'กลุ่ม'
         ,'B' as 'ระดับการศึกษา'
-        ,case when curriculum.AbbreviationEn in ('DTDS','PYPY') then 'take a course with IC'
+        ,case when (curriculum.AbbreviationEn in ('DTDS','PYPY') and std.StudentStatus = 'prc') then 'take a course with IC'
             when std.StudentStatus = 'prc' then 'passed_all_required_courses'
             when std.StudentStatus = 'pa' then 'passed_away'
             when std.StudentStatus = 'rs' then 'resigned'
@@ -66,7 +66,6 @@ student_data = pd.read_sql('''
     inner join curriculum.CurriculumVersions curriculumVersion on curriculumVersion.Id = curriculumInfo.CurriculumVersionId
     inner join curriculum.Curriculums curriculum on curriculum.Id = curriculumVersion.CurriculumId
     where curriculumInfo.IsActive = '1' and (left(std.Code,2) > '49' and left(std.Code,2) < '99')
-    order by std.Code
 ''',sky_engine)
 
 df = pd.DataFrame(student_data)
