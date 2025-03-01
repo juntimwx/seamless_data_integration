@@ -45,7 +45,8 @@ LEFT JOIN fee.InvoiceItems invoiceItem ON invoiceItem.InvoiceId = invoice.Id
 df = pd.DataFrame(data)
 
 print(df)
-df.to_sql('finance_invoice_20250220', engine, index=False, chunksize=500, if_exists='append')
+df.to_sql('finance_invoice_20250228', engine, index=False, chunksize=500, if_exists='append')
+# df.to_sql('finance_invoice_20250220', engine, index=False, chunksize=500, if_exists='append')
 # df.to_sql('finance_invoice_20250214', engine, index=False, chunksize=500, if_exists='append')
 # df.to_sql('finance_invoice_20250131', engine, index=False, chunksize=500, if_exists='append')
 # df.to_sql('finance_invoice_20250124', engine, index=False, chunksize=500, if_exists='append')  #replace
