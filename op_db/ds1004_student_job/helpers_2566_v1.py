@@ -422,44 +422,44 @@ def get_position_type_series(df_data):
         "Research Assistant": "343990",
         "Career Advisor / HR Consultant": "241990",
         "Assistant": "419010",
-        "Marketing Executive ": "241960",
+        "Marketing Executive": "241960",
         "Founder": "121030",
         "Product Operations Analyst": "241990",
-        "Brand & Growth Associate ": "241960",
+        "Brand & Growth Associate": "241960",
         "Tutoring teacher": "232010",
-        "Research and Development ": "241990",
+        "Research and Development": "241990",
         "UXUI Designer": "347190",
-        "Management Trainee ": "343990",
+        "Management Trainee": "343990",
         "Inventory Controller": "413140",  # เจ้าหน้าที่คลังพัสดุ
         "Margin Management Analyst": "241990",
         "Content creator": "245190",
-        "Sales executive ": "241960",
+        "Sales executive": "241960",
         "Software Developer": "213210",
         "Programme Officer (Writer)": "245190",
-        "Property Consultant ": "341320",
+        "Property Consultant": "341320",
         "Corporate Finance and Treasury": "241110",
-        "Senior Client Relations Manager ": "123130",
+        "Senior Client Relations Manager": "123130",
         "Data Scientist": "213990",
         "Nutrition Advisor": "322320",  # ที่ปรึกษาด้านการควบคุมอาหาร/นักโภชนาการ
         "E-commerce Executive": "241960",
         "Owner": "121030",
         "Website manager and graphic assistant": "213220",
         "Procurement contracts administrator": "341610",
-        "Business Investment Associate ": "241990",
-        "Revenue management ": "241990",
+        "Business Investment Associate": "241990",
+        "Revenue management": "241990",
         "Client Solutions Analyst (Private Equity)": "241990",
         "Product management": "241990",
         "Graphic design": "347130",
         "Learning Coordinator": "343990",
-        "Data scientists ": "213990",
+        "Data scientists": "213990",
         "MD": "121030",
         "Community Associate": "343990",
         "Visual Merchandiser": "347190",
         "AAd Operation & Performance Marketing Analyst": "241990",
         "Export CX": "413120",
-        "Investor Relations ": "241990",
-        "Digital Marketing ": "241960",
-        "Manager ": "123130",
+        "Investor Relations": "241990",
+        "Digital Marketing": "241960",
+        "Manager": "123130",
         "Business Development Executive": "241990",
         "Dog Fitness Trainee": "X11020",
         "Ceo Assistant": "343120",
@@ -469,10 +469,10 @@ def get_position_type_series(df_data):
         "Ux designer": "347190",
         "Volumetric Accountant": "241110",
         "QC staff": "315290",
-        "Software Engineer  ": "213160",
+        "Software Engineer ": "213160",
         "CEO & Founder": "121030",
         "MTPE": "244440",  # (Machine Translation Post-Editor) จัดเป็นนักแปล
-        "Consultant executive ": "241990",
+        "Consultant executive": "241990",
         "Program officer": "343990",
         "Marketing/ Project Manager": "123330",
         "Management Associate": "343990",
@@ -483,50 +483,50 @@ def get_position_type_series(df_data):
         "Analyst": "241990",
         "Model,": "521020",  # นายแบบ นางแบบ
         "Tourist guide": "511310",  # มัคคุเทศก์
-        "Learning & Development Coordinator ": "343990",
+        "Learning & Development Coordinator": "343990",
         "Assistant Purchasing Manager": "123520",
         "Financial Markets officer": "241990",
-        "Assistant to family ": "419010",
+        "Assistant to family": "419010",
         "Personal Assistant": "343120",
-        "Sale coordinator ": "341520",
+        "Sale coordinator": "341520",
         "Management Trainee - Sales & Operation": "343990",
         "Event Officer": "343990",
-        "Hotel Reception ": "422220",  # พนักงานต้อนรับ (โรงแรม)
-        "Head of marketing ": "123330",
-        "Sales Coordinator ": "341520",
+        "Hotel Reception": "422220",  # พนักงานต้อนรับ (โรงแรม)
+        "Head of marketing": "123330",
+        "Sales Coordinator": "341520",
         "Managing Partner": "121030",
         "Production staff": "932190",  # แรงงานด้านการประกอบอื่น ๆ
         "Risk Manager": "123130",
         "Creative Production": "245190",
         "Freelance English tutor": "232010",
         "Thai Language Review": "245190",
-        "Product development executive ": "241990",
-        "Sales executives ": "241960",
+        "Product development executive": "241990",
+        "Sales executives": "241960",
         "HR": "419020",
         "PMO": "343990",
         "Project Management": "343990",
         "Content creator, freelance graphic designer": "245190",
         "Assistant Fund Manager": "241990",
         "quality assurance": "315290",
-        "Project Manager ": "123990",
-        "Associate ": "241990",
+        "Project Manager": "123990",
+        "Associate": "241990",
         "Live streamer": "245190",
         "Reservation Agent": "422290",
         "Mt": "343990",  # (ถ้าหมายถึง Management Trainee)
         "System engineer": "214930",  # วิศวกรคอมพิวเตอร์
         "Software Tester": "213990", 
-        "Sales Associates ": "341520",
+        "Sales Associates": "341520",
         "Accountant": "241110",
         "Livestream Operator": "245190",
         "R&D": "241990",
         "Tech consult": "241990",
         "Investment Banking Advisor": "241990",
         "Client Service Assistant": "419010",
-        "Relationship officer ": "241990",
+        "Relationship officer": "241990",
         "Business analyse": "241990",
         "Assistance Sound engineer": "313190",
         "CFO": "121030",
-        "Business operation coordinator ": "343990",
+        "Business operation coordinator": "343990",
         "Co-poducer": "343990",
         "Liquidity Associate": "241990",
         "Owner & CEO": "121030",
@@ -537,17 +537,17 @@ def get_position_type_series(df_data):
         "Marketing Executive": "241960",
         "Tax consultant": "241130",
         "UMC (management candidate)": "X11020",
-        "Freelance ": "X11020",
+        "Freelance": "X11020",
         "Relationship Management": "241990",
         "Partnership": "241990",
-        "Investment consultant ": "241990",
-        "Sales assistant ": "341520",
+        "Investment consultant": "241990",
+        "Sales assistant": "341520",
         "Designer": "347190",
         "Vm": "347190",
         "Seller": "522020",  # พนักงานขายของหน้าร้าน
-        "Business owners ": "121030",
+        "Business owners": "121030",
         ".": "X11020",
-        "Editorial coordinator ": "343990",
+        "Editorial coordinator": "343990",
         "Business development": "241990",
         "Human Resources Officer": "419020",
         "Performance Marketing": "241960",
@@ -557,26 +557,26 @@ def get_position_type_series(df_data):
         "AMD": "X11020",
         "Greeter": "422210",
         "Import": "413120",
-        "Executive Assistant ": "343120",
+        "Executive Assistant": "343120",
         "Purchaser": "341610",
         "Protocol Officer": "343990",
         "No": "X11030",
         "BD": "241990",
         "Writer": "245110",  # นักประพันธ์
         "Demand planningAssociate": "241990",
-        "Assistant of member of parliament ": "343990",  # ไม่มีโค้ดเฉพาะผู้ช่วย ส.ส.
-        "Account executive ": "241960",
+        "Assistant of member of parliament": "343990",  # ไม่มีโค้ดเฉพาะผู้ช่วย ส.ส.
+        "Account executive": "241960",
         "Brand Associate": "241960",
         "Partner executive": "241990",
         "Data & Informative Marketing": "241960",
         "Product Op": "241990",
-        "Managing director ": "121030",
-        "Associate consultant HR executive search ": "241990",
+        "Managing director": "121030",
+        "Associate consultant HR executive search": "241990",
         "Product Operation Analyst": "241990",
         "Project Officer": "343990",
         "Sales": "341520",
         "Product Marketing Officer": "241960",
-        "Biddable executive ": "241960",
+        "Biddable executive": "241960",
         "English Teacher": "232010",
         "Family Business": "121030",
         "Sales Executive": "241960",
@@ -588,28 +588,28 @@ def get_position_type_series(df_data):
         "COO": "121030",
         "Junior Marketing Consultant": "241990",
         "Assistance Manager": "123130",
-        "Business administration ": "241990",
+        "Business administration": "241990",
         "Wms Associate": "413140",  # เจ้าหน้าที่คลังพัสดุ (Warehouse Management System)
         "Interpreters": "244420",  # ล่าม
         "HR Specialist (Management Trainee)": "419020",
         "General": "X11020",
         "Care Supervisor": "516990",
-        "Receptionist ": "422210",
+        "Receptionist": "422210",
         "Project occordinator": "343990",
         "MMOS staff": "X11020",
         "Marketing Analysts": "241960",
-        "Account manager ": "123130",
+        "Account manager": "123130",
         "Sale officer assistant": "341520",
         "International Manager": "123130",
-        "Marketing associate ": "241960",
+        "Marketing associate": "241960",
         "Real Estate": "341320",
         "Senior Leadership Team Supporter and Communication Officer / Translator": "244440",
         "Communication Assistant (Part-time)": "343990",
-        "Onboarding Experience Coordinator ": "343990",
+        "Onboarding Experience Coordinator": "343990",
         "Merchandiser": "343990",
-        "Business Analyst ": "241990",
+        "Business Analyst": "241990",
         "Marketing Planning and strategy analyst": "241960",
-        "Managing assistant ": "343120",
+        "Managing assistant": "343120",
         "Production manager and Artist relation": "123990",
         "Digital campaign specialist": "241960",
         "News Reporters and Translators": "245126",  # ผู้สื่อข่าวหนังสือพิมพ์ (สำหรับ Reporter), (งานแปลใกล้เคียง)
@@ -617,10 +617,10 @@ def get_position_type_series(df_data):
         "Coordinator Marcom": "343990",
         "Manager Assitance": "343120",
         "เจ้าหน้าที่แผนกการตลาด": "241960",
-        "Affiliate Influencer Management ": "241990",
+        "Affiliate Influencer Management": "241990",
         "Assistant Manager": "123130",
         "Tour Guide": "511310",
-        "personal concierge ": "422290"
+        "personal concierge": "422290"
     }
 
     work_status_series = get_work_status_series(df_data)
@@ -1369,7 +1369,7 @@ def get_work_country_series(df_data):
         "Australia": "AU",
         "Singapore": "SG",
         "Depends": "no data",
-        "Australia ": "AU",
+        "Australia": "AU",
         "Any countries": "no data",
         "Either Thailand or Overseas in countries such as Singapore or Hong Kong": "TH",  # ทั้งสอง => เลือก TH
         "China": "CN",
@@ -1602,7 +1602,7 @@ def get_program_education_id_series(df_data):
         "Alternative Investments & Risk management": "000000",  
         "International relations": "000223",  # การระหว่างประเทศ
         "Business": "000013",  # BUSINESS
-        "Medicine ": "001565",  # แพทยศาสตร์
+        "Medicine": "001565",  # แพทยศาสตร์
         "Logistics": "000026",  # การจัดการการขนส่งและโลจิสติกส์
         "International Relations": "000223",  # การระหว่างประเทศ
         "Medicine field": "001565",  # แพทยศาสตร์
@@ -1612,7 +1612,7 @@ def get_program_education_id_series(df_data):
         "Supply chain and logistics": "000026",  # การจัดการการขนส่งและโลจิสติกส์
         "Marketing, Management": "000027",  # การจัดการการตลาด (เลือกกลาง ๆ)
         "Business Administration/ Manager": "000050",  # BUSINESS ADMINISTRATION
-        "Marketing ": "000101",  # การตลาด
+        "Marketing": "000101",  # การตลาด
         "something related with UX UI and 3D model": "003359",  # 3D ANIMATION/DIGITAL EFFECTS
         "Chinese language/business": "000730",  # ภาษาจีน
         "Management, Events Management, Marketing": "000232",  # CONVENTION AND EVENT MANAGEMENT (เลือกเน้น events)
@@ -1630,7 +1630,7 @@ def get_program_education_id_series(df_data):
         "Business related": "000013",  # BUSINESS
         "IT/ Psychology": "000000",
         "Language": "000000",
-        "Management ": "000024",  # การจัดการ
+        "Management": "000024",  # การจัดการ
         "Sustainability": "000219",  # การพัฒนาอย่างยั่งยืน
         "Arts": "001104",  # ศิลปะ
         "digital design": "000128",  # COMMUNICATION DESIGN (ใกล้เคียงงานออกแบบดิจิทัล)
@@ -1648,7 +1648,7 @@ def get_program_education_id_series(df_data):
         "Medical doctor": "001565",  # แพทยศาสตร์
         "Engineering": "000375",  # ENGINEERING
         "Either Finance or Cinematic Art": "000000",
-        "Psychology ": "000395",  # จิตวิทยา
+        "Psychology": "000395",  # จิตวิทยา
         "Event management": "000232",  # CONVENTION AND EVENT MANAGEMENT
         "Haven't decided yet": "000000",
         "Hospitality": "000343",  # การโรงแรม
@@ -1667,7 +1667,7 @@ def get_program_education_id_series(df_data):
         "Marketing/Finance": "000000",
         "Data Analytic": "000063",  # BUSINESS DATA ANALYSIS
         "media and communicate": "000300",  # การสื่อสารมวลชน
-        "Bioinformatics ": "000442",  # ชีวสารสนเทศและชีววิทยาระบบ
+        "Bioinformatics": "000442",  # ชีวสารสนเทศและชีววิทยาระบบ
         "Digital Marketing": "000101",  # การตลาด
         "Entrepreneur / digital marketing": "000323",  # การเป็นผู้ประกอบการ
         "Business/marketing": "000013",  # BUSINESS
@@ -1677,7 +1677,7 @@ def get_program_education_id_series(df_data):
         "Politics": "000325",  # การเมืองการปกครอง
         "Doctor of Medicine": "001565",  # แพทยศาสตร์
         "go blow hospitality business management": "000030",  # การจัดการการท่องเที่ยวและการโรงแรม
-        "MBA ": "000050",  # BUSINESS ADMINISTRATION
+        "MBA": "000050",  # BUSINESS ADMINISTRATION
         "Early childhood education/child psychology": "000289",  # EARLY CHILDHOOD EDUCATION
         "Environment": "000083",  # การจัดการสิ่งแวดล้อม
         "Food Science and Business": "000583",  # FOOD SCIENCE AND TECHNOLOGY (ผสมด้านธุรกิจ)
@@ -1694,7 +1694,7 @@ def get_program_education_id_series(df_data):
         "Microbiology and Immunology": "000420",  # จุลชีววิทยา (รวมด้านภูมิคุ้มกัน)
         "Human-Computer Interaction": "000000",
         "Criminology": "001238",  # อาชญาวิทยา การบริหารงานยุติธรรมและสังคม
-        "Business ": "000013",
+        "Business": "000013",
         "Business Management": "000093",  # BUSINESS MANAGEMENT
         "School management": "000000",
         "Fashion, Event Organizer": "000000",
@@ -1705,12 +1705,12 @@ def get_program_education_id_series(df_data):
         "Education": "000302",  # EDUCATION
         "3d": "003359",  # 3D ANIMATION/DIGITAL EFFECTS
         "Accounting and Finance": "000000",
-        "Education ": "000302",
+        "Education": "000302",
         "Dramaturgy": "000287",  # DRAMA
         "Master of Business Administration (Marketing)": "000050", 
         "Anatomy": "000017",  # กายวิภาคศาสตร์
         "Law": "000001",  # กฎหมาย
-        "Chinese language ": "000730",  # ภาษาจีน
+        "Chinese language": "000730",  # ภาษาจีน
         "Business Administration or Art Design": "000050",  # BUSINESS ADMINISTRATION (สุ่มเลือก)
         "Cosmetics or fashion": "000000",
         "Economics and Finance": "000544",  # FINANCIAL ECONOMICS
@@ -1756,7 +1756,7 @@ def get_program_education_id_series(df_data):
         "Real Estate/ Entrepreneurship": "000529",  # ธุรกิจอสังหาริมทรัพย์
         "Music": "000470",  # ดนตรี
         "Digital marketing": "000101", 
-        "Finance ": "000318",
+        "Finance": "000318",
         "Biodesign in medicine": "000000",
         "Entrepreneur": "000323",
         "Neuroscience": "000627",  # ประสาทวิทยาศาสตร์
@@ -1769,8 +1769,8 @@ def get_program_education_id_series(df_data):
         "Drama or finance": "000000",
         "Art and design, Illustration, language (Japanese)": "000000",
         "Strategy": "000000",
-        "Cybersecurity ": "000000",
-        "International business ": "000527",
+        "Cybersecurity": "000000",
+        "International business": "000527",
         "Design for Art Direction": "000305",
         "Logistics and supply chain management": "000026",
         "Marketing, MBA": "000050",
@@ -1808,7 +1808,7 @@ def get_program_education_id_series(df_data):
         "Investment banking": "000110",
         "idk": "000000",
         "Sound engineer": "000000",
-        "Microbiology and immunology ": "000420",
+        "Microbiology and immunology": "000420",
         "Astrophysics": "000000",
         "Do not know yet": "000000",
         "Bussiness Administration": "000050",
@@ -1820,12 +1820,12 @@ def get_program_education_id_series(df_data):
         "Computer science": "000167",
         "Fashion Design": "000536",  # FASHION DESIGN
         "Medical": "001565",
-        "hospitality ": "000343",
+        "hospitality": "000343",
         "Maybe MBA": "000050",
         "Business Analyst/ Entrepreneur": "000323",
         "Culture and Languages": "000000",
         "Hospitality/ management": "000343",
-        "Economic ": "000284",  # DEVELOPMENT ECONOMICS (เลือกใกล้เคียง)
+        "Economic": "000284",  # DEVELOPMENT ECONOMICS (เลือกใกล้เคียง)
         "Art": "001104",
         "Branding": "000101",
         "Business Analyst": "000063",  # BUSINESS DATA ANALYSIS
@@ -1833,7 +1833,7 @@ def get_program_education_id_series(df_data):
         "AI and Machine Letning": "007777",
         "Thai traditional medicine": "001568",
         "Mk": "000101",  # การตลาด
-        "Science ": "000904",  # วิทยาศาสตร์
+        "Science": "000904",  # วิทยาศาสตร์
         "It might be psychological or educational": "000000",
         "Human development": "000684",  # พัฒนาการมนุษย์
         "Sustain": "000219",  # การพัฒนาอย่างยั่งยืน
