@@ -17,26 +17,26 @@ df = pd.DataFrame()
 # โหลดค่าจากไฟล์ .env
 load_dotenv()
 
-engine = create_engine(f"mssql+pyodbc://{os.getenv('SKY_USERNAME')}:{quote(os.getenv('SKY_PASSWORD'))}@{os.getenv('SKY_HOST')}/{os.getenv('SKY_DATABASE')}?driver=ODBC+Driver+17+for+SQL+Server")
+# engine = create_engine(f"mssql+pyodbc://{os.getenv('SKY_USERNAME')}:{quote(os.getenv('SKY_PASSWORD'))}@{os.getenv('SKY_HOST')}/{os.getenv('SKY_DATABASE')}?driver=ODBC+Driver+17+for+SQL+Server")
 
-data_sql = pd.read_sql('''
-    select 
-        Code
-        --,Gender
-        ,case when Gender = 1 then 'male'
-            when Gender = 2 then 'female'
-            else 'not specified' end as Gender
-        ,CitizenNumber
-        ,Passport 
-    from student.Students
-''', engine)
-df_sql = pd.DataFrame(data_sql)
+# data_sql = pd.read_sql('''
+#     select 
+#         Code
+#         --,Gender
+#         ,case when Gender = 1 then 'male'
+#             when Gender = 2 then 'female'
+#             else 'not specified' end as Gender
+#         ,CitizenNumber
+#         ,Passport 
+#     from student.Students
+# ''', engine)
+# df_sql = pd.DataFrame(data_sql)
 
-df['CITIZEN_ID'] = helpers_2566_v1.get_citizen_id_series(df_data, df_sql)
+# df['CITIZEN_ID'] = helpers_2566_v1.get_citizen_id_series(df_data, df_sql)
 df['UNIV_ID'] = '00600'
 df['STD_ID'] = df_data['Student ID-Final']
 df['QN_WORK_STATUS'] = helpers_2566_v1.get_work_status_series(df_data)
-df['QN_MILITARY_STATUS'] = helpers_2566_v1.get_military_status_series(df_data, df_sql)
+# df['QN_MILITARY_STATUS'] = helpers_2566_v1.get_military_status_series(df_data, df_sql)
 df['QN_ORDINATE_STATUS'] = helpers_2566_v1.get_ordinate_status_series(df_data)
 df['QN_OCCUP_TYPE'] = helpers_2566_v1.get_occup_type_series(df_data)
 df['QN_OCCUP_TYPE_TXT'] = helpers_2566_v1.get_occup_type_text(df_data)

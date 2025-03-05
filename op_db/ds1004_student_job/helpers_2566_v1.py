@@ -1570,8 +1570,8 @@ def get_level_education_series(df_data):
 
 def get_program_education_series(df_data):
     mapping_program_education = {
-        "same field of study": "1",
-        "different field of study": "2"
+        "Same field of study": "1",
+        "Different field of study": "2"
     }
     
     # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน == 2 || 4
@@ -1585,11 +1585,11 @@ def get_program_education_series(df_data):
         # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
         if work_status in ['2', '4']:
             # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
-            mapped_value = mapping_program_education.get(str(row['What field you want to further your study?']).strip().lower())
+            mapped_value = mapping_program_education.get(str(row['What field you want to further your study?']).strip())
         else:
             if required_education == '1':
                 # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
-                mapped_value = mapping_program_education.get(str(row['What field you want to further your study?']).strip().lower())
+                mapped_value = mapping_program_education.get(str(row['What field you want to further your study?']).strip())
             else:
                 mapped_value = ''
             # ถ้า work_status ไม่เท่ากับ '2' หรือ '4' ตอบกลับเป็นค่าว่าง
@@ -1642,6 +1642,7 @@ def get_program_education_id_series(df_data):
         "Chinese language/business": "000730",  # ภาษาจีน
         "Management, Events Management, Marketing": "000232",  # CONVENTION AND EVENT MANAGEMENT (เลือกเน้น events)
         "Public Administration": "000835",  # รัฐประศาสนศาสตร์
+        "public administration": "000835",  # รัฐประศาสนศาสตร์
         "Data analysts": "000063",  # BUSINESS DATA ANALYSIS
         "Tourism&hospitality management": "000030",  # การจัดการการท่องเที่ยวและการโรงแรม
         "Computer Science": "000167",  # COMPUTER SCIENCE
@@ -1650,11 +1651,13 @@ def get_program_education_id_series(df_data):
         "Biological sciences": "000938",  # วิทยาศาสตร์ชีวภาพ
         "Master": "000000",
         "Psychology": "000395",  # จิตวิทยา
+        "psychology": "000395",  # จิตวิทยา
         "Business and trade": "000522",  # ธุรกิจ
         "Master of Science": "000000",
         "Business related": "000013",  # BUSINESS
         "IT/ Psychology": "000000",
         "Language": "000000",
+        "language": "000000",
         "Management": "000024",  # การจัดการ
         "Sustainability": "000219",  # การพัฒนาอย่างยั่งยืน
         "Arts": "001104",  # ศิลปะ
@@ -1703,6 +1706,7 @@ def get_program_education_id_series(df_data):
         "Doctor of Medicine": "001565",  # แพทยศาสตร์
         "go blow hospitality business management": "000030",  # การจัดการการท่องเที่ยวและการโรงแรม
         "MBA": "000050",  # BUSINESS ADMINISTRATION
+        "Mba": "000050",  # BUSINESS ADMINISTRATION
         "Early childhood education/child psychology": "000289",  # EARLY CHILDHOOD EDUCATION
         "Environment": "000083",  # การจัดการสิ่งแวดล้อม
         "Food Science and Business": "000583",  # FOOD SCIENCE AND TECHNOLOGY (ผสมด้านธุรกิจ)
@@ -1713,6 +1717,7 @@ def get_program_education_id_series(df_data):
         "Nutrition": "001251",  # อาหารและโภชนาการ
         "International Law and International Relations": "000000",
         "Data science": "007777",  # DATA SCIENCE AND ARTIFICIAL INTELLIGENCE
+        "Data Science": "007777",  # DATA SCIENCE AND ARTIFICIAL INTELLIGENCE
         "Food Innovation, Nutrition and Health": "000583",
         "Philosophy": "000630",  # ปรัชญา
         "Accounts": "000878",  # วิชาชีพการบัญชี
@@ -1721,6 +1726,7 @@ def get_program_education_id_series(df_data):
         "Criminology": "001238",  # อาชญาวิทยา การบริหารงานยุติธรรมและสังคม
         "Business": "000013",
         "Business Management": "000093",  # BUSINESS MANAGEMENT
+        "Business management": "000093",  # BUSINESS MANAGEMENT
         "School management": "000000",
         "Fashion, Event Organizer": "000000",
         "Finance and accounting": "000000",
@@ -1735,6 +1741,7 @@ def get_program_education_id_series(df_data):
         "Master of Business Administration (Marketing)": "000050", 
         "Anatomy": "000017",  # กายวิภาคศาสตร์
         "Law": "000001",  # กฎหมาย
+        "law": "000001",  # กฎหมาย
         "Chinese language": "000730",  # ภาษาจีน
         "Business Administration or Art Design": "000050",  # BUSINESS ADMINISTRATION (สุ่มเลือก)
         "Cosmetics or fashion": "000000",
@@ -1760,6 +1767,7 @@ def get_program_education_id_series(df_data):
         "UX Researcher": "003359",
         "None": "000000",
         "Business Management": "000093",
+        "Business management": "000093",
         "Bioengineering": "003875",  # BIOENGINEERING
         "New media design": "000128",
         "Data Analyst": "000063",
@@ -1799,6 +1807,7 @@ def get_program_education_id_series(df_data):
         "Design for Art Direction": "000305",
         "Logistics and supply chain management": "000026",
         "Marketing, MBA": "000050",
+        "marketing": "000050",
         "Molecular Biology": "000432",  # ชีววิทยาของเซลล์และโมเลกุล
         "Information Technology": "001423",  # เทคโนโลยีสารสนเทศ
         "Food Production": "000000",
@@ -1851,6 +1860,7 @@ def get_program_education_id_series(df_data):
         "Culture and Languages": "000000",
         "Hospitality/ management": "000343",
         "Economic": "000284",  # DEVELOPMENT ECONOMICS (เลือกใกล้เคียง)
+        "economic": "000284",
         "Art": "001104",
         "Branding": "000101",
         "Business Analyst": "000063",  # BUSINESS DATA ANALYSIS
