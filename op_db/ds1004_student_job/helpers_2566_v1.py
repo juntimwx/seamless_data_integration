@@ -277,6 +277,7 @@ def get_position_type_series(df_data):
         "Regional Sales Executive": "341520",
         "Stylist and designer": "347150",  # นักออกแบบเสื้อผ้า, ผลิตภัณฑ์สิ่งทอสิ่งถัก
         "AE": "241960",  # (มักหมายถึง Account Executive ในงานการตลาด/โฆษณา)
+        "Ae": "241960",  # (มักหมายถึง Account Executive ในงานการตลาด/โฆษณา)
         "General Document Controlle": "419010",  # (งานเอกสาร)
         "Project Manager": "123990",  # ผู้จัดการฝ่ายอื่น ๆ (งานบริหารโครงการ)
         "Content Moderator": "245190",
@@ -288,11 +289,13 @@ def get_position_type_series(df_data):
         "Assistant": "419010",  # เลขานุการ/ผู้ช่วยงานทั่วไป
         "Senior Translator": "244440",  # นักแปล
         "Cabin crew": "511120",  # พนักงานต้อนรับบนเครื่องบิน
+        "Cabin Crew": "511120",  # พนักงานต้อนรับบนเครื่องบิน
         "BD&KOL specialist": "241960", 
         "Market Research Analyst": "241950",  # นักวิจัยตลาด
         "Application Developer": "213210",
         "Marketing planning and strategy": "241960",
         "Software Engineer": "213160",
+        "software engineer": "213160",
         "F2F Fundraiser": "241990",
         "Marketing Trainee": "241960",
         "Production assistant": "343990",
@@ -322,11 +325,11 @@ def get_position_type_series(df_data):
         "Human Resource Officer": "419020",
         "Homes Operation Coordinator": "343990",
         "Guest service agent": "422210",
+        "Guest Service Agent": "422210",
         "Japanese Assistant": "244420",  # ล่าม
         "Trust and Safety Associate": "343990",
         "Sales representative": "341520",
         "sales and marketing executive": "241960",
-        "Graphic designer": "347130",  # นักออกแบบภาพกราฟฟิก
         "Commercial Flagship Store Manager for Power Tools - Singapore Market": "123130",
         "Software Engineer": "213160",
         "Marketing Manager": "123330",
@@ -335,6 +338,7 @@ def get_position_type_series(df_data):
         "Chef de partie": "512230",  # พ่อครัว ; ผู้ปรุงอาหาร
         "Marketing & Project Coordinator": "241960",
         "Ceo": "121030",
+        "CEO": "121030",
         "Aide to municipal level of political party": "114190",  # เจ้าหน้าที่บริหารขององค์กรพรรคการเมืองอื่น ๆ
         "General Manager": "123130",
         "Senior Analyst, Seller Operation Service": "241990",
@@ -378,6 +382,7 @@ def get_position_type_series(df_data):
         "ASEAN Supply and Logistics, Logistics Representative": "413390",  # ผู้ขนส่งสินค้าอื่น ๆ (งานโลจิสติกส์)
         "ผู้ช่วยผู้รับใบอนุญาต": "343120",
         "Business Analyst": "241990",
+        "Business analyst": "241990",
         "Data analyst": "241990",
         "HR Coordinator": "419020",
         "Teacher assistant": "333020",  # ครูผู้ช่วย (การศึกษาพิเศษ) *กรณีไม่มีโค้ดอื่นครอบคลุม
@@ -390,6 +395,7 @@ def get_position_type_series(df_data):
         "Agent": "341520",
         "Event Co-ordinator": "343990",
         "Academic Administration": "343990",
+        "Academic administration": "343990",
         "receptionist": "422210",
         "Human Resources": "419020",
         "Marketing (Import - export)": "241960",
@@ -398,7 +404,7 @@ def get_position_type_series(df_data):
         "Mathematics Tutor": "232010",
         "PSA": "X11020",
         "English Teacher & Content Creator": "232010",
-        "Purchasing Manager\t": "123520",  # ผู้จัดการฝ่ายจัดซื้อและวัสดุ
+        "Purchasing Manager": "123520",  # ผู้จัดการฝ่ายจัดซื้อและวัสดุ
         "Quality assurance engineer": "214925",
         "Educator": "232010",
         "Assistant Sales and Marketing Manager": "123320",
@@ -414,6 +420,7 @@ def get_position_type_series(df_data):
         "Procurement": "341610",  # ผู้จัดซื้อทั่วไป
         "Brand Assistant": "241960",
         "Content Moderator": "245190",
+        "Content moderator": "245190",
         "Financial advisory analyst": "241990",
         "RM supporter": "241990",
         "Assistant to Tourism, Culture and Press Section": "343990",
@@ -423,6 +430,7 @@ def get_position_type_series(df_data):
         "Career Advisor / HR Consultant": "241990",
         "Assistant": "419010",
         "Marketing Executive": "241960",
+        "Marketing executive": "241960",
         "Founder": "121030",
         "Product Operations Analyst": "241990",
         "Brand & Growth Associate": "241960",
@@ -437,6 +445,7 @@ def get_position_type_series(df_data):
         "Software Developer": "213210",
         "Programme Officer (Writer)": "245190",
         "Property Consultant": "341320",
+        "Property consultant": "341320",
         "Corporate Finance and Treasury": "241110",
         "Senior Client Relations Manager": "123130",
         "Data Scientist": "213990",
@@ -447,6 +456,7 @@ def get_position_type_series(df_data):
         "Procurement contracts administrator": "341610",
         "Business Investment Associate": "241990",
         "Revenue management": "241990",
+        "Revenue Management": "241990",
         "Client Solutions Analyst (Private Equity)": "241990",
         "Product management": "241990",
         "Graphic design": "347130",
@@ -470,6 +480,7 @@ def get_position_type_series(df_data):
         "Volumetric Accountant": "241110",
         "QC staff": "315290",
         "Software Engineer ": "213160",
+        "software engineer ": "213160",
         "CEO & Founder": "121030",
         "MTPE": "244440",  # (Machine Translation Post-Editor) จัดเป็นนักแปล
         "Consultant executive": "241990",
@@ -546,6 +557,7 @@ def get_position_type_series(df_data):
         "Vm": "347190",
         "Seller": "522020",  # พนักงานขายของหน้าร้าน
         "Business owners": "121030",
+        "Business owner": "121030",
         ".": "X11020",
         "Editorial coordinator": "343990",
         "Business development": "241990",
@@ -620,7 +632,10 @@ def get_position_type_series(df_data):
         "Affiliate Influencer Management": "241990",
         "Assistant Manager": "123130",
         "Tour Guide": "511310",
-        "personal concierge": "422290"
+        "personal concierge": "422290",
+        "Graphic designer": "000128",
+        "Graphic Designer": "000128",
+        "graphic designer": "000128",
     }
 
     work_status_series = get_work_status_series(df_data)
