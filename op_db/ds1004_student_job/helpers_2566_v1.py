@@ -1926,31 +1926,24 @@ def get_program_education_id_series(df_data):
 
 def get_problem_education_series(df_data):
     mapping_problem_education = {
-        "no": "01",  # ไม่มีปัญหา
-        "yes (lack of academic qualifications)": "03",  # คุณสมบัติในการสมัครเรียน
-        "yes (lack of financial support)": "05",  # ขาดแคลนเงินทุน
-        "all of the above": "00",  # อื่นๆให้ระบุ (ตอบหลายข้อ)
-        "i'm not sure if studying in thailand or abroad would be the better option": "02",  # ข้อมูลสถานที่ศึกษาต่อไม่เพียงพอ
-        """i"m not sure if studying in Thailand or abroad would be the better option""": "02",  # ข้อมูลสถานที่ศึกษาต่อไม่เพียงพอ
-        "yes (insufficient required knowledge)": "04",  # ขาดความรู้พื้นฐานในการศึกษาต่อ
-        "yes (insufficient institution information)": "02",  # ข้อมูลสถานที่ศึกษาต่อไม่เพียงพอ
-        "yes (not yet pass audition)": "03",  # คุณสมบัติในการสมัครเรียน (ผ่านการออดิชั่น)
-        "studying in thai language": "00",  # อื่นๆให้ระบุ
-        "yes (unavailable free time)": "00",  # อื่นๆให้ระบุ
-        "yes because the university system changed to put all the grades from exchange university back to muic, when back then students can choose which courses to transfer back, and i was not satisfy with the results since they put me to study with master's degree students and the head of exchange unit was not being nice once i sent the grade results": "00",  # อื่นๆให้ระบุ
-        "not sure about field of studies": "00",  # อื่นๆให้ระบุ
-        "work condition": "00",  # อื่นๆให้ระบุ
-        "have not decided which field to study yet.": "00",  # อื่นๆให้ระบุ
-        "i want to gain experience in working before continuing studying.": "00",  # อื่นๆให้ระบุ
-        "money and chore problem lol": "05",  # ขาดแคลนเงินทุน
-        "some problems with lack of physical diploma before the graduation ceremony (however it’s been resolved)": "03",  # คุณสมบัติในการสมัครเรียน
-        "yes (lack of work experience)": "00",  # อื่นๆให้ระบุ
-        "working": "00",  # อื่นๆให้ระบุ
-        "lack of working experiences": "00",  # อื่นๆให้ระบุ
+        "No": "01",  # ไม่มีปัญหา
+        "Yes (Lack of financial support)": "05",  # ขาดแคลนเงินทุน
+        "Yes (Insufficient institution information)": "02",  # ข้อมูลสถานที่ศึกษาต่อไม่เพียงพอ
+        "Yes (Insufficient required knowledge)": "04",  # ขาดความรู้พื้นฐานในการศึกษาต่อ
+        "-": "00",  # อื่นๆให้ระบุ
+        "Yes (Lack of academic qualifications)": "03",  # คุณสมบัติในการสมัครเรียน
+        "All of above": "00",  # อื่นๆให้ระบุ
+        "My passion": "00",  # อื่นๆให้ระบุ
+        "lack of self-confidence ;—;": "00",  # อื่นๆให้ระบุ
+        "Seek for scholarship": "00",  # อื่นๆให้ระบุ
+        "Yes (lack of financial support and insufficient institution info)": "05",  # ขาดแคลนเงินทุน และ ข้อมูลสถานที่ศึกษาต่อไม่เพียงพอ
+        "Lack of time and anchor of responsibility": "00",  # อื่นๆให้ระบุ
+        "I want to try working first before committing": "00",  # อื่นๆให้ระบุ
+        "Lack of time": "00",  # อื่นๆให้ระบุ
+        "Lack work experience": "00",  # อื่นๆให้ระบุ
+        "yes, i haven't given it much thought and not enough money to pay for it yet.": "05",  # ขาดแคลนเงินทุน
     }
-    
-        # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน == 2 || 4
-    
+
     # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน == 2 || 4
     work_status_series = get_work_status_series(df_data)
     # เรียกใช้ฟังก์ชัน get_require_education_series เพื่อรับ Series ของความต้องการเรียนต่อ == 1
@@ -1962,11 +1955,11 @@ def get_problem_education_series(df_data):
         # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
         if work_status in ['2', '4']:
             # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
-            mapped_value = mapping_problem_education.get(str(row['Do you have any problem in furthering your study?']).strip().lower())
+            mapped_value = mapping_problem_education.get(str(row['Do you have any problem in furthering your study?']).strip())
         else:
             if required_education == '1':
                 # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
-                mapped_value = mapping_problem_education.get(str(row['Do you have any problem in furthering your study?']).strip().lower())
+                mapped_value = mapping_problem_education.get(str(row['Do you have any problem in furthering your study?']).strip())
             else:
                 mapped_value = ''
             # ถ้า work_status ไม่เท่ากับ '2' หรือ '4' ตอบกลับเป็นค่าว่าง
@@ -1987,7 +1980,7 @@ def get_problem_education_text(df_data):
         # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
         if value == '00':
             # ถ้า cause_education_series เท่ากับ '00' ตอบกลับเป็นค่า Do you have any problem in furthering your study?
-            mapped_value = row['Do you have any problem in furthering your study?']
+            mapped_value = str(row['Do you have any problem in furthering your study?']).strip()
         else:
             # ถ้า cause_education_series เป็นค่าอื่นๆ ตอบกลับเป็นค่าว่าง
             mapped_value = ''
@@ -2031,14 +2024,18 @@ def get_type_university_series(df_data):
 
 def get_cause_education_series(df_data):
     mapping_cause_education = {
+        "my own desire": "4",  # เป็นความต้องการของตนเอง
         "parent’s desire": "1",  # เป็นความต้องการของบิดา/มารดา หรือผู้ปกครอง
-        "my own desire": "4",    # เป็นความต้องการของตนเอง
         "career requirement": "2",  # งานที่ต้องการต้องใช้วุฒิสูงกว่า ปริญญาตรี
         "scholarship acquirement": "3",  # ได้รับทุนศึกษาต่อ
-        "not studying man….": "0",  # อื่นๆให้ระบุ
-        "growth in career path": "4",  # เป็นความต้องการของตนเอง
-        "more knowledge": "4",  # เป็นความต้องการของตนเอง
-        "exploring overseas' academic and also for the sake of career advancement": "4",  # เป็นความต้องการของตนเอง
+        "I want to grow, but more slowly and with some learned experience this time, instead of forcing my way to a management position as I have done..": "4",  # เป็นความต้องการของตนเอง
+        "Aim to create a ground-breaking startup that creates a new industry.": "4",  # เป็นความต้องการของตนเอง
+        "Higher paid job": "4",  # เป็นความต้องการของตนเอง
+        "-": "0",  # อื่นๆให้ระบุ
+        "Convenience of being close to home": "0",  # อื่นๆให้ระบุ
+        "My own and parents’": "4",  # เป็นความต้องการของตนเอง
+        "Not studying": "0",  # อื่นๆให้ระบุ
+        "in order to learn new things that can help me get a better job to aid me in having a stable income in the future.": "4",  # เป็นความต้องการของตนเอง
     }
     
     # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน == 2 || 4
@@ -2052,11 +2049,11 @@ def get_cause_education_series(df_data):
         # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
         if work_status in ['2', '4']:
             # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
-            mapped_value = mapping_cause_education.get((str(row['What are the reasons for furthering your study?']).strip().lower()),'0')
+            mapped_value = mapping_cause_education.get((str(row['What are the reasons for furthering your study?']).strip()))
         else:
             if required_education == '1':
                 # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
-                mapped_value = mapping_cause_education.get((str(row['What are the reasons for furthering your study?']).strip().lower()),'0')
+                mapped_value = mapping_cause_education.get((str(row['What are the reasons for furthering your study?']).strip()))
             else:
                 mapped_value = ''
             # ถ้า work_status ไม่เท่ากับ '2' หรือ '4' ตอบกลับเป็นค่าว่าง
