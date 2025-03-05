@@ -1504,7 +1504,10 @@ def get_require_education_series(df_data):
             mapped_value = ''
         else:
             if pd.isna(row['Further Study Plan']) or str(row['Further Study Plan']).strip() == "":
-                mapped_value = "no data"
+                if pd.isna(row['What level you want to further your study?']) or str(row['What level you want to further your study?']).strip() == "":
+                    mapped_value = "no data"
+                else:
+                    mapped_value = "1"
             else:
                 mapped_value = mapping_required_education.get(str(row['Further Study Plan']).strip(), '')
             
@@ -1520,8 +1523,8 @@ def get_level_education_series(df_data):
         "Graduate diploma": "50",
         "Medical degree": "40", # ปริญญาตรี
         "Master's degree": "60", # ปริญญาโท
-        "Master’s degree": "60", # ปริญญาโท
         "a certificate/specialization (which offers higher rate of salary than a doctor's degree.)": "90", # ประกาศนียบัตรหรือหลักสูตรเฉพาะ (ที่บรรจุในอัตราเงินเดือนสูงกว่าปริญญาเอก)
+        "a certificate/specialization (which offers higher rate of salary than a doctor’s degree.)": "90", # ประกาศนียบัตรหรือหลักสูตรเฉพาะ (ที่บรรจุในอัตราเงินเดือนสูงกว่าปริญญาเอก)
         "Bachelor's degree": "40", # ปริญญาตรี
         "Doctoral degree": "80", # ปริญญาเอก
         "a higher graduate diploma": "70", # ประกาศนียบัตรบัณฑิตชั้นสูง
@@ -1529,8 +1532,7 @@ def get_level_education_series(df_data):
         "Both masters and certificates (I've always been a certificate chaser lol)": "60",
         "Not sure": "no data",
         "Language": "30" ,  # ประกาศนียบัตรวิชาชีพชั้นสูง (ในกรณีที่เป็นหลักสูตรหรือประกาศนียบัตรด้านภาษา)
-        "MD (doctor of medicine)": "80", # MD ถือเป็นปริญญาเอกในด้านการแพทย์
-        "": "no data",
+        "MD (doctor of medicine)": "80" # MD ถือเป็นปริญญาเอกในด้านการแพทย์
     }
 
     
@@ -1545,11 +1547,17 @@ def get_level_education_series(df_data):
         # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
         if work_status in ['2', '4']:
             # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
-            mapped_value = mapping_level_education.get(str(row['What level you want to further your study?']).strip())
+            if pd.isna(row['What level you want to further your study?']) or str(row['What level you want to further your study?']).strip() == "":
+                mapped_value = "no data"
+            else:
+                mapped_value = mapping_level_education.get(str(row['What level you want to further your study?']).strip())
         else:
             if required_education == '1':
                 # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
-                mapped_value = mapping_level_education.get(str(row['What level you want to further your study?']).strip())
+                if pd.isna(row['What level you want to further your study?']) or str(row['What level you want to further your study?']).strip() == "":
+                    mapped_value = "no data"
+                else:
+                    mapped_value = mapping_level_education.get(str(row['What level you want to further your study?']).strip())
             else:
                 mapped_value = ''
             # ถ้า work_status ไม่เท่ากับ '2' หรือ '4' ตอบกลับเป็นค่าว่าง
