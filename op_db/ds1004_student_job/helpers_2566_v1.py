@@ -1493,44 +1493,46 @@ def get_require_education_series(df_data):
         "NOT planning to study": "2",
         "Planning to study": "1",
         "Currently studying": "1"
-
-        # "yes": "1",
-        # "no": "2"
     }
     
     # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน == 2 || 4
     work_status_series = get_work_status_series(df_data)
+    
     def map_data(row):
         work_status = str(work_status_series.loc[row.name])
-
-        # ตรวจสอบเพิ่มเติมตามเงื่อนไขที่กำหนด
         if work_status in ['2', '4']:
-            # ถ้า work_status เท่ากับ '2' หรือ '4' ตอบกลับเป็นค่าว่าง
             mapped_value = ''
         else:
-            # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่ map ข้อมูลได้
-            mapped_value = mapping_required_education.get(str(row['Further Study Plan']).strip())
-
+            if pd.isna(row['Further Study Plan']) or str(row['Further Study Plan']).strip() == "":
+                mapped_value = "no data"
+            else:
+                mapped_value = mapping_required_education.get(str(row['Further Study Plan']).strip(), '')
+            
         return mapped_value
 
     return df_data.apply(map_data, axis=1)
 
 
+
 def get_level_education_series(df_data):
     mapping_level_education = {
         "Graduate diploma": "50",   # ประกาศนียบัตรบัณฑิต
+        "Graduate diploma": "50",
+        "Medical degree": "40", # ปริญญาตรี
         "Master's degree": "60", # ปริญญาโท
+        "Master’s degree": "60", # ปริญญาโท
+        "a certificate/specialization (which offers higher rate of salary than a doctor's degree.)": "90", # ประกาศนียบัตรหรือหลักสูตรเฉพาะ (ที่บรรจุในอัตราเงินเดือนสูงกว่าปริญญาเอก)
+        "Bachelor's degree": "40", # ปริญญาตรี
         "Doctoral degree": "80", # ปริญญาเอก
         "a higher graduate diploma": "70", # ประกาศนียบัตรบัณฑิตชั้นสูง
-        "a certificate/specialization (which offers higher rate of salary than a doctor’s degree.)": "90", # ประกาศนียบัตรหรือหลักสูตรเฉพาะ (ที่บรรจุในอัตราเงินเดือนสูงกว่าปริญญาเอก)
-        "Master's degree": "60", # ปริญญาโท
-        "Bachelor's degree": "40", # ปริญญาตรี
         "Not sure yet": "no data",
+        "Both masters and certificates (I've always been a certificate chaser lol)": "60",
         "Not sure": "no data",
         "Language": "30" ,  # ประกาศนียบัตรวิชาชีพชั้นสูง (ในกรณีที่เป็นหลักสูตรหรือประกาศนียบัตรด้านภาษา)
-        "Both masters and certificates (I've always been a certificate chaser lol)": "60",
-        "MD (doctor of medicine)": "80" # MD ถือเป็นปริญญาเอกในด้านการแพทย์
+        "MD (doctor of medicine)": "80", # MD ถือเป็นปริญญาเอกในด้านการแพทย์
+        "": "no data",
     }
+
     
     # เรียกใช้ฟังก์ชัน get_work_status_series เพื่อรับ Series ของสถานะการทำงาน == 2 || 4
     work_status_series = get_work_status_series(df_data)
