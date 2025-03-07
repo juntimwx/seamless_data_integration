@@ -111,23 +111,24 @@ df = df[['QN_YEAR'] + [col for col in df.columns if col != 'QN_YEAR']]
 
 df.to_excel(f'~/Downloads/draft_ds1004_2566_{datetime.today().strftime('%Y-%m-%d_%H-%M-%S')}.xlsx')
 
-print("Dataframe Preview:")
-print(df.head())
-# try to insert data to database.
-try:
-    # insert data to database appending new rows.
-    result = df.to_sql(os.getenv('DS_1004'), engine, schema=os.getenv('SCHEMA_DEFAULT'), index=False, chunksize=1000, if_exists='append')
+# ปรับเปลี่ยนเอาข้อมูลออกมา clean ก่อน แล้วนำเข้าระบบอีกครั้ง
+# print("Dataframe Preview:")
+# print(df.head())
+# # try to insert data to database.
+# try:
+#     # insert data to database appending new rows.
+#     result = df.to_sql(os.getenv('DS_1004'), engine, schema=os.getenv('SCHEMA_DEFAULT'), index=False, chunksize=1000, if_exists='append')
     
-    # display a message when data inserted successfully and show number of row inserted to database.
-    print(f"Data inserted successfully. Number of rows inserted: {len(df)}")
+#     # display a message when data inserted successfully and show number of row inserted to database.
+#     print(f"Data inserted successfully. Number of rows inserted: {len(df)}")
     
-# handle error such as connection or SQL command issues.
-except SQLAlchemyError as e:
-    # display a message when data insertion fails.
-    print("Failed to insert data into the database.")
-    print(f"Error: {e}")
-    exit()
-except Exception as e:
-    # display a message when data insertion fails.
-    print("An unexpected error occurred.")
-    print(f"Error: {e}")
+# # handle error such as connection or SQL command issues.
+# except SQLAlchemyError as e:
+#     # display a message when data insertion fails.
+#     print("Failed to insert data into the database.")
+#     print(f"Error: {e}")
+#     exit()
+# except Exception as e:
+#     # display a message when data insertion fails.
+#     print("An unexpected error occurred.")
+#     print(f"Error: {e}")
