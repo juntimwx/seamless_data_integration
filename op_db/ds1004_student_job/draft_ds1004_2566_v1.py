@@ -98,11 +98,14 @@ df['QN_ADDPROGRAM7_TXT'] = helpers_2566_v1.get_parse_program_data(df_data)['QN_A
 df['QN_COMMENT_PROGRAM'] = df_data['Suggestions regarding course and field of study (optional)']
 df['QN_COMMENT_LEARN'] = df_data['Suggestions regarding teaching (optional)']
 df['QN_COMMENT_ACTIVITY'] = df_data['Suggestions regarding student development activities (optional)']
+df['QN_DATE_UPDATE'] = df_data['QN_DATE_UPDATE'].apply(
+    lambda x: datetime.strptime(x.split()[0], "%Y/%m/%d").strftime("%Y-%m-%d") if isinstance(x, str) else x
+)
 
-df['QY_YEAR'] = '2567'
+df['QN_YEAR'] = '2567'
 
 # ใช้ list comprehension
-df = df[['QY_YEAR'] + [col for col in df.columns if col != 'QY_YEAR']]
+df = df[['QN_YEAR'] + [col for col in df.columns if col != 'QN_YEAR']]
 
 # print(df.head(15))
 
