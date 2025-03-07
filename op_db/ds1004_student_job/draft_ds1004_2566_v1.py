@@ -1,5 +1,6 @@
 import pandas as pd
 from sqlalchemy import create_engine
+from sqlalchemy.exc import SQLAlchemyError
 from urllib.parse import quote
 from dotenv import load_dotenv
 import os
@@ -17,7 +18,8 @@ df = pd.DataFrame()
 # โหลดค่าจากไฟล์ .env
 load_dotenv()
 
-engine = create_engine(f"mssql+pyodbc://{os.getenv('SKY_USERNAME')}:{quote(os.getenv('SKY_PASSWORD'))}@{os.getenv('SKY_HOST')}/{os.getenv('SKY_DATABASE')}?driver=ODBC+Driver+17+for+SQL+Server")
+sky_engine = create_engine(f"mssql+pyodbc://{os.getenv('SKY_USERNAME')}:{quote(os.getenv('SKY_PASSWORD'))}@{os.getenv('SKY_HOST')}/{os.getenv('SKY_DATABASE')}?driver=ODBC+Driver+17+for+SQL+Server")
+engine = create_engine(f"mssql+pyodbc://{os.getenv('DATA_USERNAME')}:{quote(os.getenv('DATA_PASSWORD'))}@{os.getenv('DATA_HOST')}/{os.getenv('OP_DATABASE')}?driver=ODBC+Driver+17+for+SQL+Server")
 
 data_sql = pd.read_sql('''
     select 
@@ -29,7 +31,7 @@ data_sql = pd.read_sql('''
         ,CitizenNumber
         ,Passport 
     from student.Students
-''', engine)
+''', sky_engine)
 df_sql = pd.DataFrame(data_sql)
 
 df['CITIZEN_ID'] = helpers_2566_v1.get_citizen_id_series(df_data, df_sql)
@@ -102,6 +104,27 @@ df['QY_YEAR'] = '2567'
 # ใช้ list comprehension
 df = df[['QY_YEAR'] + [col for col in df.columns if col != 'QY_YEAR']]
 
-print(df.head(15))
+# print(df.head(15))
 
 df.to_excel(f'~/Downloads/draft_ds1004_2566_{datetime.today().strftime('%Y-%m-%d_%H-%M-%S')}.xlsx')
+
+print("Dataframe Preview:")
+print(df.head())
+# try to insert data to database.
+try:
+    # insert data to database appending new rows.
+    result = df.to_sql(os.getenv('DS_1004'), engine, schema=os.getenv('SCHEMA_DEFAULT'), index=False, chunksize=1000, if_exists='append')
+    
+    # display a message when data inserted successfully and show number of row inserted to database.
+    print(f"Data inserted successfully. Number of rows inserted: {len(df)}")
+    
+# handle error such as connection or SQL command issues.
+except SQLAlchemyError as e:
+    # display a message when data insertion fails.
+    print("Failed to insert data into the database.")
+    print(f"Error: {e}")
+    exit()
+except Exception as e:
+    # display a message when data insertion fails.
+    print("An unexpected error occurred.")
+    print(f"Error: {e}")
