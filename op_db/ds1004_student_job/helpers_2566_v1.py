@@ -995,7 +995,7 @@ def get_work_tel_text(df_data):
             mapped_value = ''
         else:
             # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่นักศึกษากรอกข้อมูล
-            mapped_value = row['Tel of your workplace']
+            mapped_value = row['QN_WORK_TEL'] #row['Tel of your workplace']
 
         return mapped_value
 
@@ -1015,7 +1015,7 @@ def get_work_fax_text(df_data):
             mapped_value = ''
         else:
             # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่นักศึกษากรอกข้อมูล
-            mapped_value = row['Fax of your workplace']
+            mapped_value = row['QN_WORK_FAX'] #row['Fax of your workplace']
 
         return mapped_value
 
@@ -1038,7 +1038,7 @@ def get_work_email_text(df_data):
             mapped_value = ''
         else:
             # ถ้า work_status เป็นค่าอื่นๆ ตอบกลับเป็นค่าที่นักศึกษากรอกข้อมูล
-            mapped_value = row['Email of your workplace']
+            mapped_value = row['QN_WORK_EMAIL'] #row['Email of your workplace']
             # if pd.isna(row['Email of your workplace']) or row['Email of your workplace'] == '-':
             #     mapped_value = 'no data'
 
@@ -1343,12 +1343,14 @@ def get_workneed_series(df_data):
         "China": "02",
         "Maybe USA but atleast some country where I can get by with speaking English only": "02",
         "USA": "02",
+        "Usa": "02",
         "New working environment": "no data",
         "England": "02",
         "Both Thailand and overseas": "01",
         ".": "no data",
         "Germany, Japan": "02",
         "Both": "01",
+        "both": "01",
         "Oversea (USA)": "02",
         "New Zealand": "02",
         "Uk": "02",
@@ -1390,12 +1392,14 @@ def get_work_country_series(df_data):
         "China": "CN",
         "Maybe USA but atleast some country where I can get by with speaking English only": "US",
         "USA": "US",
+        "Usa": "US",
         "New working environment": "no data",
         "England": "GB",  # England mapped to United Kingdom (GB)
         "Both Thailand and overseas": "TH",  # ทั้งสอง => เลือก TH
         ".": "no data",
         "Germany, Japan": "DE",  # เลือกประเทศแรกคือ Germany
         "Both": "TH",  # ทั้งสอง => เลือก TH
+        "both": "TH",  # ทั้งสอง => เลือก TH
         "Oversea (USA)": "US",
         "New Zealand": "NZ",
         "Uk": "GB",
