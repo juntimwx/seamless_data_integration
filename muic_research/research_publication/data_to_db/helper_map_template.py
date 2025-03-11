@@ -1,5 +1,6 @@
 import re
 import pandas as pd
+import numpy as np
 
 def get_rank(df_data):
     valid_ranks = ['Lecturer', 'Assoc.Prof.', 'Support Staff', 'Asst.Prof.', 'Prof.', 'Asst.Lect.', 'Academic Advisor']
@@ -118,3 +119,39 @@ def get_parse_database_data(df_data):
     df_clean = df_data.drop(columns=new_columns, errors='ignore')
     df_result = pd.concat([df_clean, parsed_df], axis=1)
     return df_result
+
+
+def get_clean_year(df_data):
+    # แปลงคอลัมน์ 'Year' เป็น string แล้วลบอักขระที่ไม่ใช่ตัวเลขออก
+    cleaned_year = df_data['Year'].astype(str).str.replace(r'\D', '', regex=True)
+    # หากต้องการแปลงให้เป็นตัวเลข (int) ก็สามารถทำได้ดังนี้
+    # cleaned_year = cleaned_year.astype(int)
+    return cleaned_year
+
+
+def get_clean_budget_year(df_data):
+    # แปลงคอลัมน์ 'Year' ด้วย get_clean_year ซึ่งจะให้ผลเป็น string ที่มีเฉพาะตัวเลข
+    year_clean_str = get_clean_year(df_data)
+    # แปลงให้เป็น numeric โดยใช้ errors='coerce' เพื่อแปลงค่าที่ไม่สามารถแปลงได้เป็น NaN
+    year_clean = pd.to_numeric(year_clean_str, errors='coerce')
+    # แปลงคอลัมน์ 'Month' ให้เป็น numeric ด้วยเช่นกัน
+    month = pd.to_numeric(df_data['Month'], errors='coerce')
+    
+    # ถ้า month >= 10 ให้เพิ่มปีขึ้น 1 มิฉะนั้นใช้ปีเดิม
+    year_budget = np.where(month >= 10, year_clean + 1, year_clean)
+    
+    # แปลงผลลัพธ์เป็น pandas Series โดยใช้ Nullable Integer Type เพื่อรองรับ NaN
+    return pd.Series(year_budget, index=df_data.index).astype("Int64")
+
+
+def get_format_effective_date(df_data):
+    def custom_format_date(val):
+        # ถ้า val เป็น string และมีรูปแบบเป็น "ชื่อเดือน ปี" (เช่น "April 2023")
+        if isinstance(val, str) and re.match(r'^[A-Za-z]+\s+\d{4}$', val):
+            return val
+        try:
+            return pd.to_datetime(val).strftime('%Y-%m-%d')
+        except Exception:
+            return val
+    
+    return df_data['effective_date'].apply(custom_format_date)

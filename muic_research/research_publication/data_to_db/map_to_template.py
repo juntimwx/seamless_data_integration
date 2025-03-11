@@ -46,12 +46,12 @@ def main():
     df_template['firstname'] = df_data['Firstname']
     df_template['lastname'] = df_data['Lastname']
     df_template['title'] = df_data['Title']
-    df_template['publication_month'] = df_data['publication_month']
-    df_template['publication_year'] = df_data['publication_year']
-    df_template['publication_calendar_year'] = df_data['publication_calendar_year']
-    df_template['publication_budget_year'] = df_data['publication_budget_year']
-    df_template['effective_date'] = df_data['effective_date']
-    df_template['national_international'] = df_data['national_international']
+    df_template['publication_month'] = df_data['Month']
+    df_template['publication_year'] = map_template_helper.get_clean_year(df_data)
+    df_template['publication_calendar_year'] = map_template_helper.get_clean_year(df_data)
+    df_template['publication_budget_year'] = map_template_helper.get_clean_budget_year(df_data)
+    df_template['effective_date'] = map_template_helper.get_format_effective_date(df_data)
+    df_template['national_international'] = df_data['Other Classification ("A"-Excellent, International-Very Good, National-Good)']
     df_template['sdg'] = df_data['sdg']
     
     print(df_template.head(5))
