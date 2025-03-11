@@ -4,7 +4,7 @@ from datetime import datetime
 
 def main():
     # โหลดข้อมูลจาก Excel
-    data = pd.read_excel('../../../data/muic_research/Publication_Data/Publications_20240521_clean_map_template.xlsx')
+    data = pd.read_excel('../../../data/muic_research/Publication_Data/Publications_20250307_clean_map_template.xlsx')
     df_data = pd.DataFrame(data)
     
     # ประมวลผลฐานข้อมูล เพียงครั้งเดียว
@@ -42,7 +42,7 @@ def main():
     
     # คอลัมน์อื่น ๆ จาก df_data
     df_template['division'] = df_data['Division']
-    df_template['id'] = df_data['id']
+    df_template['id'] = '' # ไม่มี column id
     df_template['product_code'] = df_data['Product Code']
     df_template['firstname'] = df_data['Firstname']
     df_template['lastname'] = df_data['Lastname']
@@ -51,13 +51,13 @@ def main():
     df_template['publication_year'] = map_template_helper.get_clean_year(df_data)
     df_template['publication_calendar_year'] = map_template_helper.get_clean_year(df_data)
     df_template['publication_budget_year'] = map_template_helper.get_clean_budget_year(df_data)
-    df_template['effective_date'] = map_template_helper.get_format_effective_date(df_data)
+    df_template['effective_date'] = '' #ไม่มี column effective date #map_template_helper.get_format_effective_date(df_data)
     df_template['national_international'] = df_data['Other Classification ("A"-Excellent, International-Very Good, National-Good)']
-    df_template['sdg'] = df_data['sdg']
+    df_template['sdg'] = df_data['SDGs Goal']
     
     print(df_template.head(5))
     
-    output_filename = f"~/Downloads/draft_publications_template_{datetime.today().strftime('%Y-%m-%d_%H-%M-%S')}.xlsx"
+    output_filename = f"~/Downloads/draft_update_publications_template_{datetime.today().strftime('%Y-%m-%d_%H-%M-%S')}.xlsx"
     df_template.to_excel(output_filename, index=False)
     print(f"Saved output to {output_filename}")
 

@@ -30,7 +30,18 @@ def get_group_rank(df_data):
     
     return df_data.apply(map_group_rank, axis=1)
 
-def get_parse_database_data(df_data):
+
+def get_parse_database_data(df_data: pd.DataFrame) -> pd.DataFrame:
+    """
+    แปลงข้อมูลจากคอลัมน์ "Database (WoS, Scopus, TCI)" โดยแยกข้อมูลของฐานข้อมูล
+    ต่าง ๆ ลงในคอลัมน์ใหม่ที่กำหนดไว้
+
+    Parameters:
+      df_data: pandas DataFrame ที่มีคอลัมน์ "Database (WoS, Scopus, TCI)"
+
+    Returns:
+      DataFrame ที่รวมคอลัมน์เดิมกับคอลัมน์ใหม่ที่ถูกแยกข้อมูลออกมาแล้ว
+    """
     # รายชื่อคอลัมน์ใหม่ที่ต้องการสร้าง
     new_columns = [
         "WoS_with_JIF-P90", "WoS_with_JIF", "WoS_SC", "WoS_SS", "WoS_AH", "WoS_ES",
@@ -39,16 +50,23 @@ def get_parse_database_data(df_data):
         "TCI_Group1", "TCI_Group2", "National_Journal"
     ]
     
-    # ฟังก์ชันแปลง string ในแต่ละแถว
-    def parse_database(db_str):
+    def parse_database(db_str: str) -> dict:
+        """
+        แปลง string ข้อมูลฐานข้อมูลในแต่ละแถว และคืนค่าเป็น dictionary ที่มี flag
+        สำหรับแต่ละคอลัมน์ที่ต้องการ
+        """
+        # กำหนดค่าเริ่มต้นเป็น 0 ให้กับทุกคอลัมน์
         result = {col: 0 for col in new_columns}
+        
         if pd.isnull(db_str):
             return result
         
+        # แยกข้อมูลแต่ละส่วนด้วยเครื่องหมายจุลภาค
         parts = db_str.split(',')
         for part in parts:
             part = part.strip()
-            # --- ตรวจสอบข้อมูล WoS ---
+            
+            # --- ตรวจสอบข้อมูลของ WoS ---
             if "WoS" in part:
                 if "(SC)" in part:
                     result["WoS_SC"] = 1
@@ -59,8 +77,9 @@ def get_parse_database_data(df_data):
                 if "(ES)" in part:
                     result["WoS_ES"] = 1
 
-                # ตรวจสอบค่า JIF-P (เช่น (JIF-P84.4))
-                match = re.search(r'JIF-P([\d\.]+)', part)
+                # ตรวจสอบค่า JIF
+                # ใช้ regex ที่รองรับทั้ง (JIF-Pxx) และ (JIF-xx)
+                match = re.search(r'JIF-?P?([\d\.]+)', part)
                 if match:
                     try:
                         jif_value = float(match.group(1))
@@ -71,7 +90,7 @@ def get_parse_database_data(df_data):
                     except ValueError:
                         pass
 
-            # --- ตรวจสอบข้อมูล Scopus ---
+            # --- ตรวจสอบข้อมูลของ Scopus ---
             if "Scopus" in part:
                 if "SJR-10" in part:
                     result["Scopus_SJR-10"] = 1
@@ -86,7 +105,7 @@ def get_parse_database_data(df_data):
                 if "No_Q" in part:
                     result["Scopus_No_Q"] = 1
 
-            # --- ตรวจสอบข้อมูล TCI ---
+            # --- ตรวจสอบข้อมูลของ TCI ---
             if "TCI" in part:
                 if "Group1" in part:
                     result["TCI_Group1"] = 1
@@ -111,15 +130,15 @@ def get_parse_database_data(df_data):
         
         return result
 
-    # คำนวณ parsed data จากคอลัมน์ "Database (WoS, Scopus, TCI)"
+    # ประมวลผลคอลัมน์ "Database (WoS, Scopus, TCI)" ด้วยฟังก์ชัน parse_database
     parsed_data = df_data["Database (WoS, Scopus, TCI)"].apply(parse_database)
     parsed_df = pd.DataFrame(parsed_data.tolist(), index=df_data.index)
     
-    # เพื่อลดปัญหา column ซ้ำ ให้ลบคอลัมน์ใน new_columns ที่อาจมีอยู่แล้วใน df_data
+    # ลบคอลัมน์ที่อาจซ้ำอยู่ใน df_data เพื่อลดปัญหาการซ้ำกันของคอลัมน์
     df_clean = df_data.drop(columns=new_columns, errors='ignore')
     df_result = pd.concat([df_clean, parsed_df], axis=1)
+    
     return df_result
-
 
 def get_clean_year(df_data):
     # แปลงคอลัมน์ 'Year' เป็น string แล้วลบอักขระที่ไม่ใช่ตัวเลขออก
