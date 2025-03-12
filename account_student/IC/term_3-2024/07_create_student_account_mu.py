@@ -79,7 +79,7 @@ print(df.head())
 # try to insert data to database.
 try:
     # insert data to database appending new rows.
-    result = df.to_sql(os.getenv('UpdateStudentStatus'), data_engine, schema=os.getenv('SCHEMA_DEFAULT'), index=False, chunksize=500, if_exists='append')
+    result = df.to_sql(os.getenv('CREATE_ACCOUNT_STUDENT_IC'), data_engine, schema=os.getenv('SCHEMA_DEFAULT'), index=False, chunksize=500, if_exists='replace')
     
     # display a message when data inserted successfully and show number of row inserted to database.
     print(f"Data inserted successfully. Number of rows inserted: {len(df)}")
