@@ -633,9 +633,9 @@ def get_position_type_series(df_data):
         "Assistant Manager": "123130",
         "Tour Guide": "511310",
         "personal concierge": "422290",
-        "Graphic designer": "000128",
-        "Graphic Designer": "000128",
-        "graphic designer": "000128",
+        "Graphic designer": "347135", # นักออกแบบภาพกราฟฟิก
+        "Graphic Designer": "347135", # นักออกแบบภาพกราฟฟิก
+        "graphic designer": "347135", # นักออกแบบภาพกราฟฟิก
     }
 
     work_status_series = get_work_status_series(df_data)
