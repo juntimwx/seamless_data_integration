@@ -87,7 +87,7 @@ foreach ($user in $users) {
                 Write-Log "User $SamAccountName UPN updated from $($adUser.UserPrincipalName) to $newUPN."
             }
             catch {
-                Write-Log "Failed to update UPN for user $SamAccountName: $($_.Exception.Message)"
+                Write-Log "Failed to update UPN for user $SamAccountName $($_.Exception.Message)"
             }
         }
         else {
@@ -125,7 +125,7 @@ foreach ($user in $users) {
         $adUser = Get-ADUser -Filter "SamAccountName -eq '$SamAccountName'" -Properties DistinguishedName, Enabled, SamAccountName, UserPrincipalName -ErrorAction Stop
     }
     catch {
-        Write-Log "Error retrieving user $SamAccountName: $($_.Exception.Message)"
+        Write-Log "Error retrieving user $SamAccountName $($_.Exception.Message)"
         Write-Log "Skipping user $SamAccountName due to retrieval error."
         Write-Log "--------------------------------------------"
         continue

@@ -2,8 +2,8 @@ import pandas as pd
 from datetime import datetime
 
 # อ่านไฟล์ Excel
-# data = pd.read_excel("../../data/account_student/PC/all_pc_student_update_20250225.xlsx")
-data = pd.read_excel("../../data/account_student/PC/all_mp_student_update_20250225.xlsx")
+data = pd.read_excel("../../data/account_student/PC/all_pc_student_update_20250225.xlsx")
+# data = pd.read_excel("../../data/account_student/PC/all_mp_student_update_20250225.xlsx")
 data_current = pd.read_excel("../../data/account_student/PC/pc_current_q1_2025.xlsx") 
 data_postpone = pd.read_excel("../../data/account_student/PC/pc_postpone_q1_2025.xlsx") 
 
@@ -41,5 +41,5 @@ df['update_status'] = df.apply(update_status_func, axis=1)
 print(df.head(5))
 
 # บันทึกไฟล์ Excel ใหม่
-# df.to_excel(f'~/Downloads/draft_update_status_student_account_pc_{datetime.today().strftime("%Y-%m-%d_%H-%M-%S")}.xlsx')
-df.to_excel(f'~/Downloads/draft_update_status_student_account_mp_{datetime.today().strftime("%Y-%m-%d_%H-%M-%S")}.xlsx')
+df.to_excel(f'~/Downloads/draft_update_status_student_account_pc_{datetime.today().strftime("%Y-%m-%d_%H-%M-%S")}.xlsx')
+# df.to_excel(f'~/Downloads/draft_update_status_student_account_mp_{datetime.today().strftime("%Y-%m-%d_%H-%M-%S")}.xlsx')
